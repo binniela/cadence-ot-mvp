@@ -1155,6 +1155,41 @@ export default function AppPage() {
           </>
         )}
       </main>
+
+      {/* ── Mobile bottom nav (hidden on desktop via CSS) ── */}
+      <nav className="app-bottom-nav">
+        <button
+          className={`app-bottom-nav__item${view === "composer" ? " app-bottom-nav__item--active" : ""}`}
+          onClick={() => setView("composer")}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M5 3h9l4 4v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+            <path d="M14 3v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+            <path d="M8 11h6M8 14.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <span>Composer</span>
+        </button>
+        <button
+          className={`app-bottom-nav__item${view === "students" ? " app-bottom-nav__item--active" : ""}`}
+          onClick={() => setView("students")}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="9" cy="7.5" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
+            <path d="M2 19c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M15.5 6a3 3 0 010 6M20 19c0-2.761-2-5-4.5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <span>Students</span>
+        </button>
+        <button
+          className={`app-bottom-nav__item${view === "quarterly" ? " app-bottom-nav__item--active" : ""}`}
+          onClick={() => setView("quarterly")}
+        >
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4 18h14M6 18v-7M10 18V8M14 18v-5M18 18V5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+          <span>Quarterly</span>
+        </button>
+      </nav>
     </div>
   );
 }

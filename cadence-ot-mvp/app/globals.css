@@ -3310,3 +3310,307 @@ a {
   0%   { opacity: 0.5; transform: scale(1); }
   100% { opacity: 0;   transform: scale(1.04); }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE — bottom nav always hidden on desktop, shown on mobile
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Bottom nav: hidden by default (desktop) */
+.app-bottom-nav {
+  display: none;
+}
+
+/* ── Mobile breakpoint ─────────────────────────────────────────────── */
+@media (max-width: 700px) {
+
+  /* ── App shell: kill sidebar, enable bottom nav ── */
+  .app-sidebar {
+    display: none;
+  }
+
+  .app-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--line-strong);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .app-bottom-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 10px 4px;
+    background: none;
+    border: none;
+    color: var(--ink-3);
+    font-family: var(--nexa);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .app-bottom-nav__item--active {
+    color: var(--brand);
+  }
+
+  /* ── Content padding: leave room for bottom nav ── */
+  .db-content {
+    padding: 20px 16px 96px;
+  }
+
+  /* ── Page titles ── */
+  .db-title {
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+
+  .db-header {
+    margin-bottom: 20px;
+  }
+
+  .db-subtitle {
+    font-size: 13px;
+  }
+
+  /* ── Privacy hint ── */
+  .composer-privacy-hint {
+    font-size: 12px;
+    padding: 9px 12px;
+    margin-bottom: 16px;
+  }
+
+  /* ── Mode toggle ── */
+  .composer-mode-toggle {
+    width: 100%;
+    margin-bottom: 14px;
+  }
+
+  .composer-mode-btn {
+    flex: 1;
+    text-align: center;
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  /* ── Field row: 2-column grid ── */
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  /* Student field spans full width */
+  .field-row .field:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .field {
+    min-width: 0;
+  }
+
+  .field-label {
+    font-size: 10px;
+  }
+
+  .field-select,
+  .field-input {
+    font-size: 14px; /* Prevent iOS zoom on focus */
+    padding: 10px 36px 10px 12px;
+  }
+
+  /* ── Mic button: big circular record button on mobile ── */
+  .mic-btn {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 14px;
+    margin: 4px auto 20px;
+    border-style: solid;
+    border-width: 2px;
+    font-size: 10px;
+  }
+
+  .mic-btn__icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mic-btn__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .mic-btn__label {
+    flex: none;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .mic-btn__pulse {
+    border-radius: 50%;
+  }
+
+  /* ── Textarea ── */
+  .composer-textarea {
+    min-height: 100px;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  /* ── Compose button ── */
+  .compose-btn {
+    font-size: 15px;
+    padding: 14px 20px;
+  }
+
+  /* ── Goal checkboxes ── */
+  .goal-checkboxes {
+    margin-bottom: 12px;
+  }
+
+  .goal-checkbox-item {
+    padding: 6px 0;
+    font-size: 13px;
+  }
+
+  /* ── Quick save fields: vertical stack ── */
+  .quick-save-fields {
+    flex-direction: column;
+  }
+
+  .quick-save-fields .field-select {
+    width: 100%;
+  }
+
+  /* ── Output panel ── */
+  .composer-output {
+    margin-top: 0;
+  }
+
+  .output-tabs {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+    scrollbar-width: none;
+  }
+
+  .output-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .output-tab {
+    font-size: 12px;
+    padding: 9px 14px;
+    white-space: nowrap;
+  }
+
+  .output-pre {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  /* ── Save bar ── */
+  .save-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .save-bar__hint {
+    font-size: 12px;
+  }
+
+  /* ── Saved bar ── */
+  .saved-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  /* ── Students: single column ── */
+  .student-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .client-card {
+    padding: 16px;
+  }
+
+  /* ── Add student form ── */
+  .add-student-form {
+    padding: 16px;
+  }
+
+  /* ── Quarterly: single column ── */
+  .quarterly-layout {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .quarterly-sidebar {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 6px;
+    padding: 0 0 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 16px;
+    width: 100%;
+    scrollbar-width: none;
+  }
+
+  .quarterly-sidebar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quarterly-student {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 20px;
+  }
+
+  .quarterly-student__meta {
+    display: none;
+  }
+
+  .quarterly-pane__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .goal-card {
+    padding: 14px;
+  }
+
+  /* ── Session history ── */
+  .session-row__meta {
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .session-row__note {
+    font-size: 12px;
+    padding: 12px;
+  }
+}
