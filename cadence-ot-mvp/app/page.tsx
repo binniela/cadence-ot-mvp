@@ -1,12 +1,12 @@
 import { NavBar } from "./components/NavBar";
 import { WaitlistForm } from "./components/WaitlistForm";
 
-const metrics = [
-  ["Time to generate a note", "<60 seconds"],
-  ["Note formats", "SOAP · DAP · Goal-bullets · Narrative"],
-  ["Paste into", "Fusion, My School Therapy, or any EMR"],
-  ["Student caseload supported", "50+ students"],
-  ["Quarterly due-risk alert", "5 days advance"],
+const stats = [
+  ["<60s", "Time to generate a note"],
+  ["4", "Note formats — SOAP, DAP, Goal-bullets, Narrative"],
+  ["Any EMR", "Paste into Fusion, My School Therapy, or your district's system"],
+  ["50+", "Students on a typical school-based caseload"],
+  ["5 days", "Quarterly due-risk advance warning"],
 ];
 
 export default function Home() {
@@ -244,18 +244,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Metrics ── */}
+      {/* ── Stats ── */}
       <section className="impact-section">
         <div className="impact-section__body">
-          <div className="impact-section__intro">
-            <p className="section-label">By the numbers</p>
-            <h2>Built for the pace of a school-based caseload.</h2>
-          </div>
-          <div className="metrics-list">
-            {metrics.map(([label, value]) => (
-              <div className="metrics-row" key={label}>
-                <span>{label}</span>
-                <strong>{value}</strong>
+          <p className="section-label" style={{ marginBottom: 48 }}>By the numbers</p>
+          <div className="stats-grid">
+            {stats.map(([value, label]) => (
+              <div className="stat-card" key={label}>
+                <strong className="stat-card__value">{value}</strong>
+                <span className="stat-card__label">{label}</span>
               </div>
             ))}
           </div>
