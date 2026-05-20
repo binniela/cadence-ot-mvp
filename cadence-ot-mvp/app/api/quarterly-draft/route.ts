@@ -44,12 +44,12 @@ CRITERION FOR MASTERY: ${goal.criterion}
 CURRENT STATUS: ${goal.status}
 
 BANKED SESSION OBSERVATIONS THIS QUARTER:
-${bulletList || "(no banked observations)"}
+${bulletList || "(no saved note evidence)"}
 
 TASK
 Write a single defensible paragraph (3–5 sentences) reporting ${first}'s progress on this goal this quarter. Required elements:
 1. Reference the baseline.
-2. Cite specific data points from the banked observations in chronological order.
+2. Cite specific data points from the saved note evidence in chronological order.
 3. State whether ${first} is on-track / needs revision / has met the criterion.
 4. Make a clinical recommendation for the next quarter.
 5. Use skilled-service language (specialized, individualized, adapted) to support IDEA medical-necessity.

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ sessions: data ?? [] });
 }
 
-// Saves a session record and appends a bullet to each banked goal.
+// Saves a session record and appends evidence bullets to addressed goals.
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

@@ -34,8 +34,8 @@ export function NavBar() {
       <div className="nav__inner">
         <span className="nav__logo">Cadence</span>
         <div className="nav__links">
-          <a href="#daily-notes">Platform</a>
-          <a href="#evidence">How it works</a>
+          <a href="#demo">Platform</a>
+          <a href="#how-it-works">How it works</a>
           <a href="#privacy">Privacy</a>
           <a href="#waitlist">Pilot</a>
         </div>

@@ -78,7 +78,7 @@ function AddStudentForm({
             className="field-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. L.C. or Liam Carter"
+            placeholder="e.g. L.C. or initials"
             required
           />
         </div>
@@ -386,7 +386,11 @@ function ComposerView({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Save failed");
-      setSavedMsg(`Saved · ${data.bulletsInserted} bullet(s) banked to quarterly`);
+      setSavedMsg(
+        data.bulletsInserted > 0
+          ? `Note saved · ${data.bulletsInserted} evidence item(s) added from this session`
+          : "Note saved · add IEP goals later to turn notes into quarterly evidence",
+      );
       setRaw("");
       setOutput(null);
       onSessionSaved();
@@ -451,7 +455,7 @@ function ComposerView({
       <div className="db-header">
         <h1 className="db-title">Composer</h1>
         <span className="db-subtitle">
-          Post-session dictation → goal-anchored note, copy to your EMR
+          Dictate from the car, review, then copy the note into your EMR
         </span>
       </div>
       <div className="composer-privacy-hint">
@@ -580,11 +584,18 @@ function ComposerView({
             </div>
           )}
 
+          {mode === "existing" && student && student.goals.length === 0 && (
+            <p className="composer-quick-hint">
+              No IEP goals linked yet — you can still generate and save today&apos;s note.
+              Add goals from Students when you want notes to create quarterly evidence.
+            </p>
+          )}
+
           {/* ── Quick mode hint ── */}
           {mode === "quick" && (
             <p className="composer-quick-hint">
-              No IEP goals needed — you&apos;ll get a strong note right away. Add goals and complete
-              the profile from the Students tab after.
+              No setup needed — get the note while the session is still fresh. Add goals
+              later if you want saved notes to feed quarterly reports.
             </p>
           )}
 
@@ -663,15 +674,15 @@ function ComposerView({
               </div>
             )}
 
-            {/* ── Existing mode: save + bank bullets ── */}
+            {/* ── Existing mode: save note and optional goal evidence ── */}
             {mode === "existing" && student && (
               <div className="save-bar">
                 <span className="save-bar__hint">
-                  Saving banks the goal-bullets toward {student.name.split(" ")[0]}&apos;s
-                  quarterly report.
+                  Saving stores today&apos;s note. If goals were selected, Cadence also adds
+                  evidence from this session for later reports.
                 </span>
                 <button className="compose-btn" onClick={handleSave} disabled={saving}>
-                  {saving ? "Saving…" : "Save + bank bullets →"}
+                  {saving ? "Saving…" : "Save note →"}
                 </button>
               </div>
             )}
@@ -680,8 +691,8 @@ function ComposerView({
             {mode === "quick" && (
               <div className="quick-save-prompt">
                 <p className="quick-save-hint">
-                  Add {quickFirst || "this student"} to your caseload to save the note and
-                  bank evidence toward quarterly reports.
+                  Add {quickFirst || "this student"} to your caseload so this note is saved.
+                  You can complete goals later.
                 </p>
                 <div className="quick-save-fields">
                   <input
@@ -720,7 +731,7 @@ function ComposerView({
           <div className="saved-bar">
             <span className="saved-bar__msg">✓ {savedMsg}</span>
             <button className="ghost-btn" onClick={onGoToQuarterly}>
-              View in Quarterly →
+              View saved notes →
             </button>
           </div>
         )}
@@ -742,7 +753,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
   const [loadingSessions, setLoadingSessions] = useState(false);
   const [expandedNote, setExpandedNote] = useState<string | null>(null);
 
-  // When student changes: seed drafted from persisted draft_paragraph, fetch session history
+  // When student changes: load persisted draft paragraphs and session history.
   useEffect(() => {
     const s = students.find((s) => s.id === studentId);
     const initial: Record<string, string> = {};
@@ -845,6 +856,25 @@ function QuarterlyView({ students }: { students: Student[] }) {
     }
   }
 
+  if (students.length === 0) {
+    return (
+      <div className="db-content">
+        <div className="db-header">
+          <h1 className="db-title">Quarterly progress reports</h1>
+          <span className="db-subtitle">
+            An afterthought built from the daily notes you save in Composer
+          </span>
+        </div>
+        <div className="empty-state">
+          <p>
+            No students yet. Start in Composer with Quick start, save the note,
+            then add goals when you want saved sessions to become report evidence.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!student) {
     return (
       <div className="db-content">
@@ -858,7 +888,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
       <div className="db-header">
         <h1 className="db-title">Quarterly progress reports</h1>
         <span className="db-subtitle">
-          {students.length} report{students.length !== 1 ? "s" : ""} · IDEA §300.320(a)(3)
+          Built later from saved Composer notes, not a separate workflow
         </span>
       </div>
 
@@ -891,15 +921,22 @@ function QuarterlyView({ students }: { students: Student[] }) {
             <button
               className="compose-btn"
               onClick={draftAll}
-              disabled={drafting !== null}
+              disabled={drafting !== null || student.goals.length === 0}
             >
-              {drafting ? "Drafting…" : "Draft all goals →"}
+              {drafting ? "Drafting…" : "Draft quarterly paragraphs →"}
             </button>
           </div>
 
           {err && <p className="error-msg">⚠ {err}</p>}
 
-          {student.goals.map((g) => (
+          {student.goals.length === 0 ? (
+            <div className="empty-state">
+              <p>
+                No IEP goals linked yet. Saved notes still live below; add goals from
+                Students when you want Cadence to turn future notes into report evidence.
+              </p>
+            </div>
+          ) : student.goals.map((g) => (
             <div key={g.id} className="goal-card">
               <div className="goal-card__header">
                 <span className="goal-card__text">{g.text}</span>
@@ -917,12 +954,12 @@ function QuarterlyView({ students }: { students: Student[] }) {
               </div>
               <div className="bullet-bank">
                 <div className="strategy-col__label" style={{ marginBottom: 8 }}>
-                  Banked observations ({g.bullets.length})
+                  Evidence from saved notes ({g.bullets.length})
                 </div>
                 {g.bullets.length === 0 ? (
                   <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
-                    No banked observations yet. Use the Composer to dictate sessions for
-                    this goal.
+                    No evidence yet. Save a Composer note that addresses this goal,
+                    and Cadence will add session evidence here.
                   </p>
                 ) : (
                   g.bullets.map((b) => (
@@ -972,8 +1009,8 @@ function QuarterlyView({ students }: { students: Student[] }) {
                   {drafting === g.id
                     ? "Drafting with Gemini…"
                     : g.bullets.length === 0
-                    ? "No banked observations yet"
-                    : "Draft paragraph from banked observations →"}
+                    ? "No saved-note evidence yet"
+                    : "Draft quarterly paragraph →"}
                 </button>
               )}
             </div>
@@ -1001,14 +1038,15 @@ function QuarterlyView({ students }: { students: Student[] }) {
                 Session notes ({sessions.length})
               </span>
               <span className="sessions-history__hint">
-                Generated notes saved from the Composer
+                Daily notes you saved from the Composer
               </span>
             </div>
             {loadingSessions ? (
               <span className="spinner" style={{ margin: "12px 0" }} />
             ) : sessions.length === 0 ? (
               <p className="sessions-history__empty">
-                No notes saved yet. Use the Composer to generate and save a session note.
+                No notes saved yet. Use Composer after a session to dictate, review,
+                and save the note.
               </p>
             ) : (
               sessions.map((s) => (
@@ -1087,10 +1125,39 @@ export default function AppPage() {
     }
   }, []);
 
-  const navItems: { id: View; label: string }[] = [
-    { id: "composer", label: "Composer" },
-    { id: "students", label: "Students" },
-    { id: "quarterly", label: "Quarterly" },
+  const navItems: { id: View; label: string; icon: React.ReactNode }[] = [
+    {
+      id: "composer",
+      label: "Composer",
+      icon: (
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M6 3.5h5.5L15 7v9.5H6z" />
+          <path d="M11.5 3.5V7H15" />
+          <path d="M8 10.5h4M8 13h3" />
+        </svg>
+      ),
+    },
+    {
+      id: "students",
+      label: "Students",
+      icon: (
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="8" cy="7" r="3" />
+          <path d="M3 16c.6-3 2.5-4.7 5-4.7S12.4 13 13 16" />
+          <path d="M13 8.5a2.4 2.4 0 0 0 0-4.7M15 16c-.2-1.8-1-3.1-2.4-3.8" />
+        </svg>
+      ),
+    },
+    {
+      id: "quarterly",
+      label: "Quarterly",
+      icon: (
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M4 16h12" />
+          <path d="M6 16V9M10 16V5M14 16v-4" />
+        </svg>
+      ),
+    },
   ];
 
   function openComposer(studentId: string) {
@@ -1101,7 +1168,12 @@ export default function AppPage() {
   return (
     <div className="app-shell light-app">
       <aside className="app-sidebar">
-        <div className="sidebar-logo">Cadence</div>
+        <div className="sidebar-brand">
+          <div>
+            <span className="sidebar-logo">Cadence</span>
+            <span className="sidebar-kicker">School OT notes</span>
+          </div>
+        </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
             <button
@@ -1109,13 +1181,17 @@ export default function AppPage() {
               className={`sidebar-nav__item ${view === item.id ? "sidebar-nav__item--active" : ""}`}
               onClick={() => setView(item.id)}
             >
-              {item.label}
+              <span className="sidebar-nav__icon">{item.icon}</span>
+              <span>{item.label}</span>
             </button>
           ))}
         </nav>
         <div className="sidebar-footer">
           <a href="/" className="sidebar-back">
-            ← Back to site
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M12 5 7 10l5 5" />
+            </svg>
+            <span>Back to site</span>
           </a>
         </div>
       </aside>

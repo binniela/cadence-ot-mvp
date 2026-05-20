@@ -69,7 +69,7 @@ RULES FOR "formatted":
 - Always include skilled-service language ("specialized", "individualized", "skilled OT", "adapted").
 
 RULES FOR "flags":
-- WARN: "No IEP goals linked — add goals to this student's profile to bank evidence toward quarterly reports."
+- WARN: "No IEP goals linked — add goals to this student's profile when you want saved notes to feed quarterly reports."
 - WARN if dictation lacks start/stop times and no minute count.
 - WARN if dictation lacks skilled-service language.
 

@@ -6,7 +6,7 @@ const stats = [
   ["4", "Note formats: SOAP, DAP, Goal-bullets, Narrative"],
   ["Any EMR", "Paste into Fusion, My School Therapy, or your district"],
   ["50+", "Students on a typical school caseload"],
-  ["5 days", "Advance warning before quarterly due dates"],
+  ["Later", "Saved notes can become quarterly evidence"],
 ];
 
 export default function Home() {
@@ -23,9 +23,9 @@ export default function Home() {
         <div className="hero__overlay" />
         <div className="hero__inner">
           <p className="hero__label">School-based OT · Voice-first</p>
-          <h1 className="hero__headline">Document in the hallway, not after bedtime.</h1>
+          <h1 className="hero__headline">Document from the car, not after bedtime.</h1>
           <p className="hero__sub">
-            Tap the mic after your session. Speak for 60 seconds. Cadence
+            Tap the mic between sessions. Speak for 60 seconds. Cadence
             returns a compliant, goal-linked note — copy it into Fusion,
             My School Therapy, or whatever your district already uses.
           </p>
@@ -49,6 +49,13 @@ export default function Home() {
             <h2 className="section-title evidence-section__title">
               Three steps. No laptop required.
             </h2>
+            <div className="how-photo">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/school-ot-car-note.png"
+                alt="School occupational therapist documenting from her car between sessions"
+              />
+            </div>
           </div>
           <div className="evidence-flow">
             <div className="evidence-step">
@@ -92,15 +99,15 @@ export default function Home() {
               Speak. Review. Copy. Done in under two minutes.
             </h2>
             <p className="platform__desc">
-              Quick start takes a first name and a 60-second recap.
-              No student profile required to get a usable note.
-              Add IEP goals when you have time — every session you document
-              banks evidence toward quarterly reports automatically.
+              Quick start takes a first name and a 60-second recap from
+              your car, hallway, or parking lot. No student profile required
+              to get a usable note. If goals are linked later, saved notes can
+              also become evidence for quarterly reports.
             </p>
             <div className="platform__checks">
               <span>No pre-built student profile required</span>
               <span>Compliance flags on every note</span>
-              <span>Medicaid service log generated automatically</span>
+              <span>Copy-ready before you leave campus</span>
             </div>
           </div>
 
@@ -236,7 +243,7 @@ export default function Home() {
               <h3>Quarterly writes itself</h3>
               <p>
                 Cadence drafts IDEA §300.320(a)(3)-compliant progress
-                narratives from your banked observations. Export to Word
+                narratives from evidence saved with your daily notes. Export to Word
                 in one click, ready for the IEP meeting.
               </p>
             </div>

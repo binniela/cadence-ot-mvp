@@ -1,17 +1,16 @@
-# Cadence Outpatient OT MVP
+# Cadence School OT MVP
 
-Cadence is a Next.js MVP for an outpatient occupational therapy documentation copilot. It is intentionally scoped as an EMR-adjacent layer: generate a defensible note, map evidence back to goals, flag billing/compliance risk, and copy the result into the clinic's existing EMR.
+Cadence is a Next.js MVP for school-based occupational therapists who need to finish daily documentation between sessions, often from a phone in the hallway, parking lot, or car. It is intentionally scoped as an EMR-adjacent layer: generate a defensible note, flag documentation gaps, and copy the result into the district's existing EMR.
 
 ## What is built
 
-- Client chart with auth burn-down, pending-note risk, active goals, and recent sessions.
-- Note copilot that accepts messy typed or pasted session notes.
-- Local prototype note engine for SOAP, DAP, or narrative output.
-- Evidence-linked goal updates that avoid marking progress unless the raw note supports it.
-- Billing review with timed-code unit math, CPT rationale, ICD-10 suggestions, and OT modifier reminders.
-- Compliance linting for missing objective data, weak skilled-intervention language, weak functional linkage, missing pediatric caregiver handoff, Cigna timed-code risk, and auth risk.
-- Reauthorization packet starter with goal evidence and medical-necessity language.
-- Competitor and MVP strategy screens based on current public research.
+- Quick-start note composer for on-the-fly school OT documentation.
+- Voice or typed post-session recap input.
+- Gemini-generated SOAP, DAP, Goal-bullets, or Narrative notes.
+- Compliance flags and service-log fields for review before copying to the EMR.
+- Optional student profiles and IEP goals.
+- Saved session-note history by student.
+- Downstream quarterly-progress drafting from saved note evidence when goals are linked.
 
 ## Run locally
 
@@ -38,15 +37,15 @@ The original static prototype remains in `index.html` as a reference artifact, b
 
 ## Important scope notes
 
-This MVP does not send data to an AI provider. The generated output is created by local deterministic JavaScript so it can be tested safely with fake data and without credentials.
+This MVP sends note-generation requests to Gemini. Use fake or de-identified data only unless the deployment has appropriate privacy, consent, and contracting controls in place.
 
-Production would replace the local generator with a HIPAA/BAA-backed model service, add authentication, audit logs, encryption, user/clinic settings, consent workflow, transcript-retention controls, and EMR-specific copy or integration adapters.
+Production would add authentication, audit logs, encryption, user/district settings, consent workflow, transcript-retention controls, provider privacy review, and EMR-specific copy or integration adapters.
 
 The billing output is advisory. A therapist or biller must review final codes, units, modifiers, payer rules, and diagnosis mapping before submission.
 
 ## Suggested first pilot
 
-Use five to ten outpatient OTs across one or two clinics. For each session:
+Use five to ten school-based OTs across one or two schools or districts. For each session:
 
 1. Therapist dictates or pastes an anonymized real session recap.
 2. Cadence generates the note and flags.
