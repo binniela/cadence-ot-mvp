@@ -34,9 +34,9 @@ export function NavBar() {
       <div className="nav__inner">
         <span className="nav__logo">Cadence</span>
         <div className="nav__links">
-          <a href="#product">Product</a>
-          <a href="#how">How it works</a>
-          <a href="#privacy">Privacy</a>
+          <a href="#platform">Platform</a>
+          <a href="#evidence">Evidence</a>
+          <a href="#security">Security</a>
           <a href="#waitlist">Pilot</a>
         </div>
         <a href="/app" className="nav__cta">Open app →</a>
