@@ -63,6 +63,19 @@ Return ONLY the paragraph — no headers, no markdown, no preamble.`;
     });
 
     const paragraph = (response.text ?? "").trim();
+
+    // Persist back to the goal row so it survives page refreshes.
+    // Wrapped in try/catch — if the column doesn't exist yet (migration not run),
+    // we still return the paragraph rather than failing the whole request.
+    try {
+      await supabaseAdmin
+        .from("iep_goals")
+        .update({ draft_paragraph: paragraph })
+        .eq("id", goalId);
+    } catch {
+      // Column not yet added — run: ALTER TABLE iep_goals ADD COLUMN IF NOT EXISTS draft_paragraph TEXT;
+    }
+
     return NextResponse.json({ paragraph });
   } catch (err) {
     return NextResponse.json({ error: geminiErrorMessage(err) }, { status: 500 });

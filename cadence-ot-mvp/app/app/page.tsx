@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { Student, IEPGoal, NoteFormat, NoteOutput, SessionType } from "@/lib/types";
+import type { Student, IEPGoal, NoteFormat, NoteOutput, SessionType, SessionRecord } from "@/lib/types";
 import { MicButton } from "@/app/components/MicButton";
 
 type View = "students" | "composer" | "quarterly";
@@ -735,13 +735,34 @@ function QuarterlyView({ students }: { students: Student[] }) {
   const [studentId, setStudentId] = useState(students[0]?.id ?? "");
   const [drafted, setDrafted] = useState<Record<string, string>>({});
   const [drafting, setDrafting] = useState<string | null>(null);
+  const [saving, setSaving] = useState<string | null>(null); // goalId being saved
   const [exporting, setExporting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<SessionRecord[]>([]);
+  const [loadingSessions, setLoadingSessions] = useState(false);
+  const [expandedNote, setExpandedNote] = useState<string | null>(null);
 
-  // Reset drafts when switching students
+  // When student changes: seed drafted from persisted draft_paragraph, fetch session history
   useEffect(() => {
-    setDrafted({});
-  }, [studentId]);
+    const s = students.find((s) => s.id === studentId);
+    const initial: Record<string, string> = {};
+    if (s) {
+      for (const g of s.goals) {
+        if (g.draft_paragraph) initial[g.id] = g.draft_paragraph;
+      }
+    }
+    setDrafted(initial);
+    setExpandedNote(null);
+
+    // Fetch session history
+    if (!studentId) return;
+    setLoadingSessions(true);
+    fetch(`/api/sessions?studentId=${studentId}`)
+      .then((r) => r.json())
+      .then((d) => setSessions(d.sessions ?? []))
+      .catch(() => setSessions([]))
+      .finally(() => setLoadingSessions(false));
+  }, [studentId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const student = students.find((s) => s.id === studentId);
 
@@ -762,6 +783,20 @@ function QuarterlyView({ students }: { students: Student[] }) {
       return false;
     } finally {
       setDrafting(null);
+    }
+  }
+
+  // Persist an edited draft paragraph back to the DB
+  async function saveDraft(goalId: string, text: string) {
+    setSaving(goalId);
+    try {
+      await fetch("/api/quarterly-draft/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goalId, paragraph: text }),
+      });
+    } finally {
+      setSaving(null);
     }
   }
 
@@ -903,10 +938,30 @@ function QuarterlyView({ students }: { students: Student[] }) {
               </div>
               {drafted[g.id] ? (
                 <div className="drafted-paragraph">
-                  <div className="strategy-col__label" style={{ marginBottom: 8 }}>
-                    IDEA-compliant progress narrative
+                  <div className="drafted-paragraph__header">
+                    <span className="strategy-col__label">IDEA-compliant progress narrative</span>
+                    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                      {saving === g.id && (
+                        <span style={{ fontSize: 11, color: "var(--ink-3)" }}>Saving…</span>
+                      )}
+                      <button
+                        className="ghost-btn"
+                        style={{ fontSize: 12, padding: "4px 10px" }}
+                        onClick={() => draftParagraph(g)}
+                        disabled={drafting === g.id}
+                      >
+                        {drafting === g.id ? "Re-drafting…" : "Re-draft →"}
+                      </button>
+                    </div>
                   </div>
-                  <p>{drafted[g.id]}</p>
+                  <textarea
+                    className="draft-textarea"
+                    value={drafted[g.id]}
+                    onChange={(e) =>
+                      setDrafted((prev) => ({ ...prev, [g.id]: e.target.value }))
+                    }
+                    onBlur={(e) => saveDraft(g.id, e.target.value)}
+                  />
                 </div>
               ) : (
                 <button
@@ -916,6 +971,8 @@ function QuarterlyView({ students }: { students: Student[] }) {
                 >
                   {drafting === g.id
                     ? "Drafting with Gemini…"
+                    : g.bullets.length === 0
+                    ? "No banked observations yet"
                     : "Draft paragraph from banked observations →"}
                 </button>
               )}
@@ -936,6 +993,56 @@ function QuarterlyView({ students }: { students: Student[] }) {
               </button>
             </div>
           )}
+
+          {/* ── Session notes history ── */}
+          <div className="sessions-history">
+            <div className="sessions-history__header">
+              <span className="strategy-col__label">
+                Session notes ({sessions.length})
+              </span>
+              <span className="sessions-history__hint">
+                Generated notes saved from the Composer
+              </span>
+            </div>
+            {loadingSessions ? (
+              <span className="spinner" style={{ margin: "12px 0" }} />
+            ) : sessions.length === 0 ? (
+              <p className="sessions-history__empty">
+                No notes saved yet. Use the Composer to generate and save a session note.
+              </p>
+            ) : (
+              sessions.map((s) => (
+                <div key={s.id} className="session-row">
+                  <div className="session-row__meta">
+                    <span className="session-row__date">
+                      {new Date(s.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </span>
+                    <span className="session-row__type">{s.session_type}</span>
+                    <span className="session-row__format">{s.format}</span>
+                    <span className="session-row__dur">{s.duration_min} min</span>
+                    {s.formatted_output && (
+                      <button
+                        className="ghost-btn"
+                        style={{ fontSize: 12, padding: "3px 10px", marginLeft: "auto" }}
+                        onClick={() =>
+                          setExpandedNote(expandedNote === s.id ? null : s.id)
+                        }
+                      >
+                        {expandedNote === s.id ? "Hide" : "View note"}
+                      </button>
+                    )}
+                  </div>
+                  {expandedNote === s.id && s.formatted_output && (
+                    <pre className="session-row__note">{s.formatted_output}</pre>
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

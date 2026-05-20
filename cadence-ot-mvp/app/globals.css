@@ -1961,16 +1961,110 @@ a {
 .drafted-paragraph {
   background: rgba(78, 138, 110, 0.06);
   border: 1px solid rgba(78, 138, 110, 0.2);
-  border-radius: 4px;
-  padding: 16px;
+  border-radius: 8px;
+  padding: 14px 16px;
 }
 
-.drafted-paragraph p {
+.drafted-paragraph__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 8px;
+}
+
+.draft-textarea {
+  width: 100%;
+  min-height: 110px;
+  background: transparent;
+  border: none;
+  outline: none;
   font-family: var(--nexa);
-  font-size: 14px;
-  font-weight: 300;
+  font-size: 13.5px;
+  font-weight: 400;
   line-height: 1.7;
   color: var(--ink);
+  resize: vertical;
+  padding: 0;
+}
+
+.draft-textarea:focus {
+  background: rgba(255,255,255,0.5);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: -6px -8px;
+}
+
+/* ── Session history ─────────────────────────────────────────────── */
+
+.sessions-history {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.sessions-history__header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.sessions-history__hint {
+  font-size: 12px;
+  color: var(--ink-3);
+}
+
+.sessions-history__empty {
+  font-size: 13px;
+  color: var(--ink-3);
+  padding: 12px 0;
+}
+
+.session-row {
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.session-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+
+.session-row__date {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.session-row__type,
+.session-row__format,
+.session-row__dur {
+  font-size: 12px;
+  color: var(--ink-3);
+  background: var(--surface-2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.session-row__note {
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--ink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding: 14px 16px;
+  margin: 0;
+  background: var(--surface-2);
+  border-top: 1px solid var(--line);
 }
 
 .ghost-btn {

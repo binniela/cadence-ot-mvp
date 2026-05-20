@@ -31,6 +31,7 @@ export async function GET() {
   for (const g of goals ?? []) {
     (goalsByStudent[g.student_id] ||= []).push({
       ...g,
+      draft_paragraph: g.draft_paragraph ?? null,
       bullets: bulletsByGoal[g.id] ?? [],
     });
   }

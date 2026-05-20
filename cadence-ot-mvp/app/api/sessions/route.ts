@@ -2,6 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import type { NoteOutput, NoteFormat, SessionType } from "@/lib/types";
 
+// Fetches session history for a student (most recent first).
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const studentId = searchParams.get("studentId");
+  if (!studentId) {
+    return NextResponse.json({ error: "studentId required" }, { status: 400 });
+  }
+  const { data, error } = await supabaseAdmin
+    .from("sessions")
+    .select("id, student_id, session_type, format, duration_min, dictation, formatted_output, created_at")
+    .eq("student_id", studentId)
+    .order("created_at", { ascending: false })
+    .limit(30);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  return NextResponse.json({ sessions: data ?? [] });
+}
+
 // Saves a session record and appends a bullet to each banked goal.
 export async function POST(req: NextRequest) {
   try {

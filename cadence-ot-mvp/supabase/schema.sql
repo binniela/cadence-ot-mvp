@@ -38,6 +38,7 @@ create table iep_goals (
   criterion text not null,
   status text not null default 'on-track',  -- on-track | needs-revision | mastered
   position int not null default 0,
+  draft_paragraph text,                     -- persisted quarterly progress narrative
   created_at timestamptz not null default now()
 );
 create index on iep_goals(student_id);

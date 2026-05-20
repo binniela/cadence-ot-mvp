@@ -22,7 +22,19 @@ export interface IEPGoal {
   criterion: string;
   status: GoalStatus;
   position: number;
+  draft_paragraph: string | null;
   bullets: GoalBullet[];
+}
+
+export interface SessionRecord {
+  id: string;
+  student_id: string;
+  session_type: string;
+  format: string;
+  duration_min: number;
+  dictation: string;
+  formatted_output: string | null;
+  created_at: string;
 }
 
 export interface Student {
