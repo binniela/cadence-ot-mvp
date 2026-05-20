@@ -2,11 +2,11 @@ import { NavBar } from "./components/NavBar";
 import { WaitlistForm } from "./components/WaitlistForm";
 
 const stats = [
-  ["<60s", "Time to generate a note"],
-  ["4", "Note formats — SOAP, DAP, Goal-bullets, Narrative"],
-  ["Any EMR", "Paste into Fusion, My School Therapy, or your district's system"],
-  ["50+", "Students on a typical school-based caseload"],
-  ["5 days", "Quarterly due-risk advance warning"],
+  ["<60s", "To generate a note"],
+  ["4", "Note formats: SOAP, DAP, Goal-bullets, Narrative"],
+  ["Any EMR", "Paste into Fusion, My School Therapy, or your district"],
+  ["50+", "Students on a typical school caseload"],
+  ["5 days", "Advance warning before quarterly due dates"],
 ];
 
 export default function Home() {
@@ -247,7 +247,12 @@ export default function Home() {
       {/* ── Stats ── */}
       <section className="impact-section">
         <div className="impact-section__body">
-          <p className="section-label" style={{ marginBottom: 48 }}>By the numbers</p>
+          <div style={{ marginBottom: 48 }}>
+            <p className="section-label">By the numbers</p>
+            <h2 className="section-title" style={{ marginTop: 12, maxWidth: 560 }}>
+              Built for the pace of a school-based caseload.
+            </h2>
+          </div>
           <div className="stats-grid">
             {stats.map(([value, label]) => (
               <div className="stat-card" key={label}>

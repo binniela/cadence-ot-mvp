@@ -775,9 +775,9 @@ a {
 }
 
 .impact-section__body {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.65fr) minmax(420px, 1fr);
-  gap: 86px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .impact-section__intro h2 {
@@ -2543,9 +2543,12 @@ a {
 
   .platform__body,
   .evidence-section__body,
-  .impact-section__body,
   .security-section__body {
     grid-template-columns: 1fr;
+    gap: 52px;
+  }
+
+  .impact-section__body {
     gap: 52px;
   }
 
