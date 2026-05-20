@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
         .from("students")
         .update({
           minutes_delivered: cur.minutes_delivered + durationMin,
-          last_session: "Just now",
+          last_session: new Date().toISOString().slice(0, 10),
         })
         .eq("id", studentId);
     }

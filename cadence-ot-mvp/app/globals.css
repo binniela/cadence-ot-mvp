@@ -2613,3 +2613,401 @@ a {
   }
 
 }
+
+/* ── Composer preview in product shell ──────────────────────────────── */
+
+.composer-input-preview {
+  background: rgba(244, 241, 234, 0.05);
+  border: 1px solid rgba(244, 241, 234, 0.1);
+  border-radius: 4px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+
+.composer-input-text {
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(244, 241, 234, 0.46);
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0;
+}
+
+.product-shell__eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 241, 234, 0.46);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ── Caseload objection section ──────────────────────────────────────── */
+
+.caseload-section {
+  background: var(--bg);
+  color: var(--ink);
+  padding: 112px 40px 124px;
+  border-top: 1px solid var(--line);
+}
+
+.caseload-section__body {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(280px, 0.75fr) minmax(420px, 1fr);
+  gap: 80px;
+}
+
+.caseload-section__title {
+  font-family: var(--editorial-display);
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: 0;
+  color: var(--ink);
+  max-width: 520px;
+  margin-top: 16px;
+}
+
+.caseload-section__copy > p {
+  color: rgba(244, 241, 234, 0.68);
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.75;
+  margin-bottom: 40px;
+}
+
+.caseload-points {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.caseload-point {
+  display: flex;
+  gap: 24px;
+  padding: 28px;
+  background: rgba(244, 241, 234, 0.025);
+}
+
+.caseload-point > span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.caseload-point strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.caseload-point p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--ink-2);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Composer privacy hint ───────────────────────────────────────────── */
+
+.composer-privacy-hint {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-3);
+  background: rgba(24, 23, 20, 0.04);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--brand);
+  border-radius: 4px;
+  padding: 8px 14px;
+  margin-bottom: 20px;
+}
+
+/* ── Responsive additions ────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .caseload-section__body {
+    grid-template-columns: 1fr;
+    gap: 52px;
+  }
+}
+
+@media (max-width: 768px) {
+  .caseload-section {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 82px;
+    padding-bottom: 90px;
+  }
+}
+
+/* ── Student list ────────────────────────────────────────────────────── */
+
+.student-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.student-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.student-row:last-child {
+  border-bottom: none;
+}
+
+.student-row:hover {
+  background: var(--surface-2);
+}
+
+.student-row__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line-strong);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+
+.student-row__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.student-row__name {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.student-row__meta {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 2px;
+}
+
+.student-row__action {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.note-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  flex-shrink: 0;
+}
+
+.note-dot--done {
+  background: #4caf76;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--ink-3);
+}
+
+.empty-state p {
+  font-size: 15px;
+  margin-bottom: 16px;
+}
+
+/* ── Add student form ────────────────────────────────────────────────── */
+
+.add-student-form {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 28px 28px 24px;
+  margin-bottom: 28px;
+}
+
+.add-student-form__title {
+  font-family: var(--nexa);
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--ink);
+}
+
+.add-student-form__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.field-input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 300;
+  padding: 9px 12px;
+  outline: none;
+  min-width: 0;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.field-input:focus {
+  border-color: var(--brand);
+}
+
+.field-input::placeholder {
+  color: var(--ink-3);
+}
+
+/* ── Goal inputs (add student form) ──────────────────────────────────── */
+
+.goal-inputs {
+  margin-top: 20px;
+}
+
+.goal-input-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.goal-input-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.goal-input-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.goal-input-sub {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.goal-input-remove {
+  background: none;
+  border: none;
+  color: var(--ink-3);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 3px;
+  margin-top: 8px;
+  transition: color 0.15s;
+  flex-shrink: 0;
+}
+
+.goal-input-remove:hover {
+  color: var(--ink);
+}
+
+/* ── Goal checkboxes (composer) ──────────────────────────────────────── */
+
+.goal-checkboxes {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.goal-checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 5px 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+
+.goal-checkbox-item input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--brand);
+}
+
+/* ── Copy button ─────────────────────────────────────────────────────── */
+
+.copy-btn {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  background: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  color: var(--ink-2);
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.copy-btn:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+  border-color: var(--ink-3);
+}

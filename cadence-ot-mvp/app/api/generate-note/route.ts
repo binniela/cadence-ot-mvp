@@ -146,7 +146,7 @@ Return only the JSON object. No code fence, no preamble.`;
 
 export async function POST(req: NextRequest) {
   try {
-    const { studentId, sessionType, format, durationMin, dictation } = await req.json();
+    const { studentId, sessionType, format, durationMin, dictation, goalIds } = await req.json();
     if (!studentId || !dictation) {
       return NextResponse.json({ error: "studentId and dictation are required" }, { status: 400 });
     }
@@ -166,7 +166,16 @@ export async function POST(req: NextRequest) {
       .eq("student_id", studentId)
       .order("position");
 
-    const fullStudent: Student = { ...student, goals: (goals ?? []).map((g) => ({ ...g, bullets: [] })) };
+    // Filter to selected goals if the composer sent a goalIds array
+    const selectedGoals =
+      Array.isArray(goalIds) && goalIds.length > 0
+        ? (goals ?? []).filter((g) => goalIds.includes(g.id))
+        : (goals ?? []);
+
+    const fullStudent: Student = {
+      ...student,
+      goals: selectedGoals.map((g) => ({ ...g, bullets: [] })),
+    };
 
     const prompt = buildPrompt({
       student: fullStudent,

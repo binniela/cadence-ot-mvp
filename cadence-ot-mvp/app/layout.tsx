@@ -1,14 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Cadence — School-Based OT Documentation",
   description:
-    "Cadence turns 9 weeks of session notes into IDEA-compliant quarterly progress reports for school-based occupational therapists."
+    "Cadence is the daily session-note copilot for school-based occupational therapists. Same-day signing, IEP-linked evidence, quarterly reports drafted for you.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {

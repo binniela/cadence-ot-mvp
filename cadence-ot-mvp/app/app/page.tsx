@@ -1,142 +1,253 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type {
-  Student,
-  IEPGoal,
-  NoteFormat,
-  NoteOutput,
-  SessionType,
-} from "@/lib/types";
+import type { Student, IEPGoal, NoteFormat, NoteOutput, SessionType } from "@/lib/types";
 
-type View = "dashboard" | "composer" | "quarterly";
+type View = "students" | "composer" | "quarterly";
 
-// ── Derived helpers ──────────────────────────────────────────────────
+// ── Add Student Form ──────────────────────────────────────────────────
 
-function deliveryPct(s: Student): number {
-  return Math.round((s.minutes_delivered / s.minutes_prescribed) * 100);
+interface NewGoal {
+  text: string;
+  baseline: string;
+  criterion: string;
 }
 
-function isAtRisk(s: Student): { atRisk: boolean; reason?: string } {
-  if (!s.parental_medicaid_consent && s.medicaid_billable)
-    return { atRisk: true, reason: "No parental Medicaid consent" };
-  if (s.triennial_reeval_days <= 60)
-    return { atRisk: true, reason: `Re-eval due in ${s.triennial_reeval_days}d` };
-  if (s.iep_anniversary_days <= 30)
-    return { atRisk: true, reason: `IEP due in ${s.iep_anniversary_days}d` };
-  if (deliveryPct(s) < 80)
-    return { atRisk: true, reason: `${100 - deliveryPct(s)}% under-delivered` };
-  return { atRisk: false };
+function AddStudentForm({
+  onSaved,
+  onCancel,
+}: {
+  onSaved: () => void;
+  onCancel: () => void;
+}) {
+  const [name, setName] = useState("");
+  const [school, setSchool] = useState("");
+  const [grade, setGrade] = useState("3");
+  const [goals, setGoals] = useState<NewGoal[]>([{ text: "", baseline: "", criterion: "" }]);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  function addGoal() {
+    setGoals((prev) => [...prev, { text: "", baseline: "", criterion: "" }]);
+  }
+
+  function removeGoal(i: number) {
+    setGoals((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
+  function updateGoal(i: number, field: keyof NewGoal, value: string) {
+    setGoals((prev) =>
+      prev.map((g, idx) => (idx === i ? { ...g, [field]: value } : g)),
+    );
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !school.trim()) return;
+    setSaving(true);
+    setErr(null);
+    try {
+      const res = await fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          school: school.trim(),
+          grade,
+          goals: goals.filter((g) => g.text.trim()),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to add student");
+      onSaved();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Unknown error");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <form className="add-student-form" onSubmit={handleSubmit}>
+      <h3 className="add-student-form__title">Add student</h3>
+      <div className="field-row">
+        <div className="field">
+          <label className="field-label">Student name / initials</label>
+          <input
+            className="field-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. L.C. or Liam Carter"
+            required
+          />
+        </div>
+        <div className="field">
+          <label className="field-label">School</label>
+          <input
+            className="field-input"
+            value={school}
+            onChange={(e) => setSchool(e.target.value)}
+            placeholder="e.g. Lincoln Elementary"
+            required
+          />
+        </div>
+        <div className="field" style={{ maxWidth: 120 }}>
+          <label className="field-label">Grade</label>
+          <select
+            className="field-select"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+          >
+            {["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"].map((g) => (
+              <option key={g}>{g}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="goal-inputs">
+        <p className="field-label" style={{ marginBottom: 10 }}>IEP goals</p>
+        {goals.map((g, i) => (
+          <div key={i} className="goal-input-row">
+            <span className="goal-input-num">{i + 1}</span>
+            <div className="goal-input-fields">
+              <input
+                className="field-input"
+                placeholder="Goal text (e.g. Student will improve fine-motor manipulation…)"
+                value={g.text}
+                onChange={(e) => updateGoal(i, "text", e.target.value)}
+              />
+              <div className="goal-input-sub">
+                <input
+                  className="field-input"
+                  placeholder="Baseline"
+                  value={g.baseline}
+                  onChange={(e) => updateGoal(i, "baseline", e.target.value)}
+                />
+                <input
+                  className="field-input"
+                  placeholder="Criterion (e.g. 80% across 3 trials)"
+                  value={g.criterion}
+                  onChange={(e) => updateGoal(i, "criterion", e.target.value)}
+                />
+              </div>
+            </div>
+            {goals.length > 1 && (
+              <button
+                type="button"
+                className="goal-input-remove"
+                onClick={() => removeGoal(i)}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        ))}
+        <button type="button" className="ghost-btn" onClick={addGoal}>
+          + Add goal
+        </button>
+      </div>
+
+      {err && <p className="error-msg">⚠ {err}</p>}
+
+      <div className="add-student-form__actions">
+        <button type="button" className="ghost-btn" onClick={onCancel}>
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="compose-btn"
+          disabled={!name.trim() || !school.trim() || saving}
+        >
+          {saving ? "Saving…" : "Add student →"}
+        </button>
+      </div>
+    </form>
+  );
 }
 
-function groupBySchool(students: Student[]): Record<string, Student[]> {
-  return students.reduce<Record<string, Student[]>>((acc, s) => {
-    (acc[s.school] ||= []).push(s);
-    return acc;
-  }, {});
-}
+// ── Students ──────────────────────────────────────────────────────────
 
-// ── Dashboard ────────────────────────────────────────────────────────
-
-function DashboardView({
+function StudentsView({
   students,
   onCompose,
+  onRefresh,
 }: {
   students: Student[];
   onCompose: (id: string) => void;
+  onRefresh: () => void;
 }) {
-  const grouped = groupBySchool(students);
-  const atRiskCount = students.filter((s) => isAtRisk(s).atRisk).length;
-  const nextDueDays = students.length
-    ? Math.min(...students.map((s) => s.quarterly_report_due_days))
-    : null;
+  const [showAdd, setShowAdd] = useState(false);
+  const today = new Date().toISOString().slice(0, 10);
+
+  function notedToday(s: Student): boolean {
+    return !!s.last_session && s.last_session.startsWith(today);
+  }
+
+  function handleSaved() {
+    setShowAdd(false);
+    onRefresh();
+  }
 
   return (
     <div className="db-content">
-      <div className="db-header">
-        <h1 className="db-title">Caseload</h1>
-        <span className="db-subtitle">
-          {students.length} students · {Object.keys(grouped).length} schools ·{" "}
-          {atRiskCount} at-risk
-          {nextDueDays !== null && ` · Quarterly reports due in ${nextDueDays} days`}
-        </span>
-      </div>
-      {Object.entries(grouped).map(([school, group]) => (
-        <div key={school} className="school-group">
-          <div className="school-group__header">
-            <span className="school-group__name">{school}</span>
-            <span className="school-group__count">{group.length} students</span>
-          </div>
-          <div className="client-grid">
-            {group.map((s) => {
-              const pct = deliveryPct(s);
-              const risk = isAtRisk(s);
-              return (
-                <div key={s.id} className="client-card" onClick={() => onCompose(s.id)}>
-                  <div className="client-card__top">
-                    <div className="client-avatar">{s.initials}</div>
-                    <div>
-                      <div className="client-name">{s.name}</div>
-                      <div className="client-meta">
-                        Gr. {s.grade} · {s.eligibility} · {s.state_program}
-                      </div>
-                    </div>
-                    <span className={`badge badge--${risk.atRisk ? "red" : "green"}`}>
-                      {risk.atRisk ? "At risk" : "On track"}
-                    </span>
-                  </div>
-                  {risk.atRisk && <div className="risk-reason">⚠ {risk.reason}</div>}
-                  <div className="auth-bar">
-                    <div className="auth-bar__label">
-                      <span>IEP minutes this quarter</span>
-                      <span className={pct < 80 ? "text-red" : ""}>
-                        {s.minutes_delivered}/{s.minutes_prescribed} min
-                      </span>
-                    </div>
-                    <div className="progress-track">
-                      <div
-                        className={`progress-fill ${pct < 80 ? "progress-fill--risk" : "progress-fill--ok"}`}
-                        style={{ width: `${Math.min(100, pct)}%` }}
-                      />
-                    </div>
-                  </div>
-                  <div className="goal-list">
-                    {s.goals.slice(0, 2).map((g) => {
-                      const last = g.bullets[g.bullets.length - 1];
-                      return (
-                        <div key={g.id} className="goal-row">
-                          <span className="goal-label">
-                            {g.text.split(" ").slice(0, 4).join(" ")}…
-                          </span>
-                          <span className={`goal-status goal-status--${g.status}`}>
-                            {g.status === "mastered"
-                              ? "Mastered"
-                              : g.status === "on-track"
-                              ? "On track"
-                              : "Revise"}
-                          </span>
-                          <span className="goal-pct">{last?.data_point ?? "—"}</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  <div className="client-card__footer">
-                    <span>Last: {s.last_session ?? "—"}</span>
-                    <span>
-                      IEP {s.iep_anniversary_days}d · Re-eval {s.triennial_reeval_days}d
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      <div
+        className="db-header"
+        style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}
+      >
+        <div>
+          <h1 className="db-title">Students</h1>
+          <span className="db-subtitle">
+            {students.length} student{students.length !== 1 ? "s" : ""} ·{" "}
+            {students.filter(notedToday).length} noted today
+          </span>
         </div>
-      ))}
+        {!showAdd && (
+          <button className="compose-btn" onClick={() => setShowAdd(true)}>
+            + Add student
+          </button>
+        )}
+      </div>
+
+      {showAdd && (
+        <AddStudentForm onSaved={handleSaved} onCancel={() => setShowAdd(false)} />
+      )}
+
+      {students.length === 0 && !showAdd ? (
+        <div className="empty-state">
+          <p>No students yet.</p>
+          <button className="ghost-btn" onClick={() => setShowAdd(true)}>
+            Add your first student →
+          </button>
+        </div>
+      ) : (
+        <div className="student-list">
+          {students.map((s) => {
+            const done = notedToday(s);
+            return (
+              <div key={s.id} className="student-row" onClick={() => onCompose(s.id)}>
+                <span
+                  className={`note-dot${done ? " note-dot--done" : ""}`}
+                  title={done ? "Noted today" : "Not yet noted today"}
+                />
+                <div className="student-row__avatar">{s.initials}</div>
+                <div className="student-row__info">
+                  <span className="student-row__name">{s.name}</span>
+                  <span className="student-row__meta">
+                    Gr. {s.grade} · {s.school}
+                  </span>
+                </div>
+                <span className="student-row__action">Note →</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
-// ── Composer ─────────────────────────────────────────────────────────
+// ── Composer ──────────────────────────────────────────────────────────
 
 function ComposerView({
   students,
@@ -154,14 +265,29 @@ function ComposerView({
   const [sessionType, setSessionType] = useState<SessionType>("Pull-out");
   const [duration, setDuration] = useState(30);
   const [studentId, setStudentId] = useState(defaultStudentId);
+  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>([]);
   const [output, setOutput] = useState<NoteOutput | null>(null);
   const [tab, setTab] = useState<"note" | "log" | "flags">("note");
   const [busy, setBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   const student = students.find((s) => s.id === studentId);
+
+  // Default: select all goals when student changes
+  useEffect(() => {
+    if (student) {
+      setSelectedGoalIds(student.goals.map((g) => g.id));
+    }
+  }, [studentId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function toggleGoal(id: string) {
+    setSelectedGoalIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  }
 
   async function handleGenerate() {
     if (!raw.trim() || !student) return;
@@ -179,6 +305,7 @@ function ComposerView({
           format,
           durationMin: duration,
           dictation: raw,
+          goalIds: selectedGoalIds.length > 0 ? selectedGoalIds : undefined,
         }),
       });
       const data = await res.json();
@@ -190,6 +317,13 @@ function ComposerView({
     } finally {
       setBusy(false);
     }
+  }
+
+  async function handleCopy() {
+    if (!output?.formatted) return;
+    await navigator.clipboard.writeText(output.formatted);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   async function handleSave() {
@@ -222,8 +356,22 @@ function ComposerView({
     }
   }
 
+  if (!student && students.length === 0) {
+    return (
+      <div className="db-content">
+        <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
+          Add a student first from the Students tab.
+        </p>
+      </div>
+    );
+  }
+
   if (!student) {
-    return <div className="db-content"><p>Loading…</p></div>;
+    return (
+      <div className="db-content">
+        <span className="spinner" />
+      </div>
+    );
   }
 
   return (
@@ -231,8 +379,11 @@ function ComposerView({
       <div className="db-header">
         <h1 className="db-title">Composer</h1>
         <span className="db-subtitle">
-          Post-session dictation → goal-anchored bullets banked toward the quarterly report
+          Post-session dictation → goal-anchored note, copy to your EMR
         </span>
+      </div>
+      <div className="composer-privacy-hint">
+        Use initials only — omit student names, DOB, and MRN from dictation.
       </div>
       <div className="composer-layout">
         <div>
@@ -259,7 +410,14 @@ function ComposerView({
                 onChange={(e) => setSessionType(e.target.value as SessionType)}
               >
                 {(
-                  ["Pull-out", "Push-in", "Consult", "Group", "Eval", "Re-eval"] as SessionType[]
+                  [
+                    "Pull-out",
+                    "Push-in",
+                    "Consult",
+                    "Group",
+                    "Eval",
+                    "Re-eval",
+                  ] as SessionType[]
                 ).map((t) => (
                   <option key={t}>{t}</option>
                 ))}
@@ -291,16 +449,39 @@ function ComposerView({
               </select>
             </div>
           </div>
+
+          {student.goals.length > 0 && (
+            <div className="goal-checkboxes">
+              <p className="field-label" style={{ marginBottom: 8 }}>
+                Goals to address in this note
+              </p>
+              {student.goals.map((g) => (
+                <label key={g.id} className="goal-checkbox-item">
+                  <input
+                    type="checkbox"
+                    checked={selectedGoalIds.includes(g.id)}
+                    onChange={() => toggleGoal(g.id)}
+                  />
+                  <span>{g.text}</span>
+                </label>
+              ))}
+            </div>
+          )}
+
           <label className="field-label" style={{ marginBottom: 8, display: "block" }}>
             Post-session dictation
           </label>
           <textarea
             className="composer-textarea"
-            placeholder={`60 seconds of what happened. e.g. "Started 9:32, ended 10:02. Pulled Liam for fine-motor — bead stringing, 8 of 10 today, independent. Trialed weighted lap pad for seated tolerance, got 3.5 min before he sought movement..."`}
+            placeholder={`60 seconds of what happened. e.g. "Started 9:32, ended 10:02. Pulled L.C. for fine-motor — bead stringing, 8 of 10 today. Trialed weighted lap pad for seated tolerance, got 3.5 min before seeking movement…"`}
             value={raw}
             onChange={(e) => setRaw(e.target.value)}
           />
-          <button className="compose-btn" onClick={handleGenerate} disabled={!raw.trim() || busy}>
+          <button
+            className="compose-btn"
+            onClick={handleGenerate}
+            disabled={!raw.trim() || busy}
+          >
             {busy ? "Generating with Gemini…" : "Generate note →"}
           </button>
           {err && <p className="error-msg">⚠ {err}</p>}
@@ -323,7 +504,14 @@ function ComposerView({
                 </button>
               ))}
             </div>
-            {tab === "note" && <pre className="output-pre">{output.formatted}</pre>}
+            {tab === "note" && (
+              <>
+                <pre className="output-pre">{output.formatted}</pre>
+                <button className="copy-btn" onClick={handleCopy}>
+                  {copied ? "✓ Copied" : "Copy to clipboard"}
+                </button>
+              </>
+            )}
             {tab === "log" && (
               <div className="billing-list">
                 {output.service_log.map((f, i) => (
@@ -351,10 +539,11 @@ function ComposerView({
             )}
             <div className="save-bar">
               <span className="save-bar__hint">
-                Saving banks the goal-bullets toward {student.name.split(" ")[0]}&apos;s quarterly report.
+                Saving banks the goal-bullets toward {student.name.split(" ")[0]}&apos;s
+                quarterly report.
               </span>
               <button className="compose-btn" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving…" : "Save session + bank bullets →"}
+                {saving ? "Saving…" : "Save + bank bullets →"}
               </button>
             </div>
           </div>
@@ -373,7 +562,7 @@ function ComposerView({
   );
 }
 
-// ── Quarterly Progress Report Wizard ─────────────────────────────────
+// ── Quarterly Progress Report Wizard ──────────────────────────────────
 
 function QuarterlyView({ students }: { students: Student[] }) {
   const [studentId, setStudentId] = useState(students[0]?.id ?? "");
@@ -414,11 +603,9 @@ function QuarterlyView({ students }: { students: Student[] }) {
     setErr(null);
     const failures: string[] = [];
     for (const g of student.goals) {
-      // Skip goals already drafted (re-running the button should be cheap)
       if (drafted[g.id] || g.bullets.length === 0) continue;
       const ok = await draftParagraph(g);
       if (!ok) failures.push(g.text.slice(0, 40) + "…");
-      // Small spacing to avoid Gemini per-minute rate limits
       await new Promise((r) => setTimeout(r, 250));
     }
     if (failures.length > 0) {
@@ -457,7 +644,11 @@ function QuarterlyView({ students }: { students: Student[] }) {
   }
 
   if (!student) {
-    return <div className="db-content"><span className="spinner" /></div>;
+    return (
+      <div className="db-content">
+        <span className="spinner" />
+      </div>
+    );
   }
 
   return (
@@ -465,7 +656,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
       <div className="db-header">
         <h1 className="db-title">Quarterly progress reports</h1>
         <span className="db-subtitle">
-          Week 9 of Q3 · {students.length} reports due in 5 days · IDEA §300.320(a)(3)
+          {students.length} report{students.length !== 1 ? "s" : ""} · IDEA §300.320(a)(3)
         </span>
       </div>
 
@@ -495,7 +686,11 @@ function QuarterlyView({ students }: { students: Student[] }) {
                 {student.minutes_delivered}/{student.minutes_prescribed} min delivered
               </p>
             </div>
-            <button className="compose-btn" onClick={draftAll} disabled={drafting !== null}>
+            <button
+              className="compose-btn"
+              onClick={draftAll}
+              disabled={drafting !== null}
+            >
               {drafting ? "Drafting…" : "Draft all goals →"}
             </button>
           </div>
@@ -524,14 +719,17 @@ function QuarterlyView({ students }: { students: Student[] }) {
                 </div>
                 {g.bullets.length === 0 ? (
                   <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
-                    No banked observations yet. Use the Composer to dictate sessions for this goal.
+                    No banked observations yet. Use the Composer to dictate sessions for
+                    this goal.
                   </p>
                 ) : (
                   g.bullets.map((b) => (
                     <div key={b.id} className="bullet-item">
                       <span className="bullet-date">{b.week_label}</span>
                       <span className="bullet-obs">{b.observation}</span>
-                      {b.data_point && <span className="bullet-data">{b.data_point}</span>}
+                      {b.data_point && (
+                        <span className="bullet-data">{b.data_point}</span>
+                      )}
                     </div>
                   ))
                 )}
@@ -562,7 +760,11 @@ function QuarterlyView({ students }: { students: Student[] }) {
               <span>
                 {Object.keys(drafted).length} of {student.goals.length} paragraphs drafted
               </span>
-              <button className="compose-btn" onClick={exportWord} disabled={exporting}>
+              <button
+                className="compose-btn"
+                onClick={exportWord}
+                disabled={exporting}
+              >
                 {exporting ? "Exporting…" : "Export to Word →"}
               </button>
             </div>
@@ -573,10 +775,10 @@ function QuarterlyView({ students }: { students: Student[] }) {
   );
 }
 
-// ── Root ─────────────────────────────────────────────────────────────
+// ── Root ──────────────────────────────────────────────────────────────
 
 export default function AppPage() {
-  const [view, setView] = useState<View>("dashboard");
+  const [view, setView] = useState<View>("composer");
   const [students, setStudents] = useState<Student[]>([]);
   const [activeStudentId, setActiveStudentId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -602,9 +804,18 @@ export default function AppPage() {
     fetchStudents();
   }, [fetchStudents]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get("view");
+    if (v === "composer" || v === "students" || v === "quarterly") {
+      setView(v as View);
+    }
+  }, []);
+
   const navItems: { id: View; label: string }[] = [
-    { id: "dashboard", label: "Caseload" },
     { id: "composer", label: "Composer" },
+    { id: "students", label: "Students" },
     { id: "quarterly", label: "Quarterly" },
   ];
 
@@ -644,14 +855,19 @@ export default function AppPage() {
           <div className="db-content">
             <p className="error-msg">⚠ {err}</p>
             <p style={{ marginTop: 12, fontSize: 13, color: "var(--ink-3)" }}>
-              Did you run <code>supabase/schema.sql</code> in your Supabase SQL editor?
+              Run <code>supabase/schema.sql</code> in your Supabase SQL editor to apply
+              the schema, then refresh.
             </p>
           </div>
         )}
         {!loading && !err && (
           <>
-            {view === "dashboard" && (
-              <DashboardView students={students} onCompose={openComposer} />
+            {view === "students" && (
+              <StudentsView
+                students={students}
+                onCompose={openComposer}
+                onRefresh={fetchStudents}
+              />
             )}
             {view === "composer" && (
               <ComposerView
