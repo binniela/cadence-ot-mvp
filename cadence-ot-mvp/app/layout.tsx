@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Cadence - Outpatient OT MVP",
+  title: "Cadence — School-Based OT Documentation",
   description:
-    "Outpatient occupational therapy documentation copilot for goal-linked, payer-defensible notes."
+    "Cadence turns 9 weeks of session notes into IDEA-compliant quarterly progress reports for school-based occupational therapists."
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
