@@ -261,12 +261,27 @@ function ComposerView({
   onSessionSaved: () => void;
   onGoToQuarterly: () => void;
 }) {
+  // Mode
+  const [mode, setMode] = useState<"existing" | "quick">(
+    students.length > 0 ? "existing" : "quick",
+  );
+
+  // Existing-student state
+  const [studentId, setStudentId] = useState(defaultStudentId);
+  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>([]);
+
+  // Quick-start state
+  const [quickFirst, setQuickFirst] = useState("");
+  const [quickLast, setQuickLast] = useState("");
+  const [quickSchool, setQuickSchool] = useState("");
+  const [quickGrade, setQuickGrade] = useState("3");
+  const [quickSaving, setQuickSaving] = useState(false);
+
+  // Shared state
   const [raw, setRaw] = useState("");
   const [format, setFormat] = useState<NoteFormat>("Goal-bullets");
   const [sessionType, setSessionType] = useState<SessionType>("Pull-out");
   const [duration, setDuration] = useState(30);
-  const [studentId, setStudentId] = useState(defaultStudentId);
-  const [selectedGoalIds, setSelectedGoalIds] = useState<string[]>([]);
   const [output, setOutput] = useState<NoteOutput | null>(null);
   const [tab, setTab] = useState<"note" | "log" | "flags">("note");
   const [busy, setBusy] = useState(false);
@@ -276,13 +291,22 @@ function ComposerView({
   const [err, setErr] = useState<string | null>(null);
 
   const student = students.find((s) => s.id === studentId);
+  const displayName =
+    mode === "existing"
+      ? (student?.name ?? "")
+      : `${quickFirst} ${quickLast}`.trim();
 
-  // Default: select all goals when student changes
+  // Auto-select all goals when student changes
   useEffect(() => {
-    if (student) {
-      setSelectedGoalIds(student.goals.map((g) => g.id));
-    }
+    if (student) setSelectedGoalIds(student.goals.map((g) => g.id));
   }, [studentId]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Clear output when switching modes
+  useEffect(() => {
+    setOutput(null);
+    setErr(null);
+    setSavedMsg(null);
+  }, [mode]);
 
   function toggleGoal(id: string) {
     setSelectedGoalIds((prev) =>
@@ -290,24 +314,39 @@ function ComposerView({
     );
   }
 
+  const canGenerate =
+    raw.trim().length > 0 &&
+    (mode === "quick" ? quickFirst.trim().length > 0 : !!student);
+
   async function handleGenerate() {
-    if (!raw.trim() || !student) return;
+    if (!canGenerate) return;
     setBusy(true);
     setErr(null);
     setSavedMsg(null);
     setOutput(null);
     try {
+      const body =
+        mode === "existing"
+          ? {
+              studentId: student!.id,
+              sessionType,
+              format,
+              durationMin: duration,
+              dictation: raw,
+              goalIds: selectedGoalIds.length > 0 ? selectedGoalIds : undefined,
+            }
+          : {
+              quickName: displayName,
+              sessionType,
+              format,
+              durationMin: duration,
+              dictation: raw,
+            };
+
       const res = await fetch("/api/generate-note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentId: student.id,
-          sessionType,
-          format,
-          durationMin: duration,
-          dictation: raw,
-          goalIds: selectedGoalIds.length > 0 ? selectedGoalIds : undefined,
-        }),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Generation failed");
@@ -327,6 +366,7 @@ function ComposerView({
     setTimeout(() => setCopied(false), 2000);
   }
 
+  // Existing-mode: save to DB
   async function handleSave() {
     if (!output || !student) return;
     setSaving(true);
@@ -357,22 +397,53 @@ function ComposerView({
     }
   }
 
-  if (!student && students.length === 0) {
-    return (
-      <div className="db-content">
-        <p style={{ color: "var(--ink-3)", fontSize: 14 }}>
-          Add a student first from the Students tab.
-        </p>
-      </div>
-    );
-  }
+  // Quick-mode: create student then save session
+  async function handleQuickSave() {
+    if (!output || !quickFirst.trim()) return;
+    setQuickSaving(true);
+    setErr(null);
+    try {
+      const sRes = await fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: displayName,
+          school: quickSchool.trim() || "—",
+          grade: quickGrade,
+        }),
+      });
+      const sData = await sRes.json();
+      if (!sRes.ok) throw new Error(sData.error ?? "Failed to create student");
 
-  if (!student) {
-    return (
-      <div className="db-content">
-        <span className="spinner" />
-      </div>
-    );
+      const nRes = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentId: sData.studentId,
+          sessionType,
+          format,
+          durationMin: duration,
+          dictation: raw,
+          output,
+        }),
+      });
+      const nData = await nRes.json();
+      if (!nRes.ok) throw new Error(nData.error ?? "Save failed");
+
+      setSavedMsg(
+        `${quickFirst} added to caseload · note saved · complete their profile from Students`,
+      );
+      setRaw("");
+      setOutput(null);
+      setQuickFirst("");
+      setQuickLast("");
+      setQuickSchool("");
+      onSessionSaved();
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Unknown error");
+    } finally {
+      setQuickSaving(false);
+    }
   }
 
   return (
@@ -388,21 +459,67 @@ function ComposerView({
       </div>
       <div className="composer-layout">
         <div>
+          {/* ── Mode toggle ── */}
+          <div className="composer-mode-toggle">
+            <button
+              className={`composer-mode-btn${mode === "existing" ? " composer-mode-btn--active" : ""}`}
+              onClick={() => setMode("existing")}
+              disabled={students.length === 0}
+              title={students.length === 0 ? "No students in caseload yet" : undefined}
+            >
+              Existing student
+            </button>
+            <button
+              className={`composer-mode-btn${mode === "quick" ? " composer-mode-btn--active" : ""}`}
+              onClick={() => setMode("quick")}
+            >
+              Quick start
+            </button>
+          </div>
+
           <div className="field-row">
-            <div className="field">
-              <label className="field-label">Student</label>
-              <select
-                className="field-select"
-                value={studentId}
-                onChange={(e) => setStudentId(e.target.value)}
-              >
-                {students.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} · Gr. {s.grade} · {s.school}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {/* ── Student field: dropdown or name inputs ── */}
+            {mode === "existing" ? (
+              students.length > 0 ? (
+                <div className="field">
+                  <label className="field-label">Student</label>
+                  <select
+                    className="field-select"
+                    value={studentId}
+                    onChange={(e) => setStudentId(e.target.value)}
+                  >
+                    {students.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} · Gr. {s.grade} · {s.school}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null
+            ) : (
+              <>
+                <div className="field">
+                  <label className="field-label">First name</label>
+                  <input
+                    className="field-input"
+                    placeholder="First"
+                    value={quickFirst}
+                    onChange={(e) => setQuickFirst(e.target.value)}
+                    autoFocus
+                  />
+                </div>
+                <div className="field">
+                  <label className="field-label">Last name</label>
+                  <input
+                    className="field-input"
+                    placeholder="Last (optional)"
+                    value={quickLast}
+                    onChange={(e) => setQuickLast(e.target.value)}
+                  />
+                </div>
+              </>
+            )}
+
             <div className="field">
               <label className="field-label">Session type</label>
               <select
@@ -411,14 +528,7 @@ function ComposerView({
                 onChange={(e) => setSessionType(e.target.value as SessionType)}
               >
                 {(
-                  [
-                    "Pull-out",
-                    "Push-in",
-                    "Consult",
-                    "Group",
-                    "Eval",
-                    "Re-eval",
-                  ] as SessionType[]
+                  ["Pull-out", "Push-in", "Consult", "Group", "Eval", "Re-eval"] as SessionType[]
                 ).map((t) => (
                   <option key={t}>{t}</option>
                 ))}
@@ -451,7 +561,8 @@ function ComposerView({
             </div>
           </div>
 
-          {student.goals.length > 0 && (
+          {/* ── Goal checkboxes — existing mode only ── */}
+          {mode === "existing" && student && student.goals.length > 0 && (
             <div className="goal-checkboxes">
               <p className="field-label" style={{ marginBottom: 8 }}>
                 Goals to address in this note
@@ -467,6 +578,14 @@ function ComposerView({
                 </label>
               ))}
             </div>
+          )}
+
+          {/* ── Quick mode hint ── */}
+          {mode === "quick" && (
+            <p className="composer-quick-hint">
+              No IEP goals needed — you&apos;ll get a strong note right away. Add goals and complete
+              the profile from the Students tab after.
+            </p>
           )}
 
           <label className="field-label" style={{ marginBottom: 8, display: "block" }}>
@@ -486,7 +605,7 @@ function ComposerView({
           <button
             className="compose-btn"
             onClick={handleGenerate}
-            disabled={!raw.trim() || busy}
+            disabled={!canGenerate || busy}
           >
             {busy ? "Generating with Gemini…" : "Generate note →"}
           </button>
@@ -505,7 +624,7 @@ function ComposerView({
                   {t === "note"
                     ? "Note"
                     : t === "log"
-                    ? `${student.state_program} log`
+                    ? `${mode === "existing" && student ? student.state_program : "Service"} log`
                     : `Flags${output.flags.length > 0 ? ` (${output.flags.length})` : ""}`}
                 </button>
               ))}
@@ -543,15 +662,57 @@ function ComposerView({
                 )}
               </div>
             )}
-            <div className="save-bar">
-              <span className="save-bar__hint">
-                Saving banks the goal-bullets toward {student.name.split(" ")[0]}&apos;s
-                quarterly report.
-              </span>
-              <button className="compose-btn" onClick={handleSave} disabled={saving}>
-                {saving ? "Saving…" : "Save + bank bullets →"}
-              </button>
-            </div>
+
+            {/* ── Existing mode: save + bank bullets ── */}
+            {mode === "existing" && student && (
+              <div className="save-bar">
+                <span className="save-bar__hint">
+                  Saving banks the goal-bullets toward {student.name.split(" ")[0]}&apos;s
+                  quarterly report.
+                </span>
+                <button className="compose-btn" onClick={handleSave} disabled={saving}>
+                  {saving ? "Saving…" : "Save + bank bullets →"}
+                </button>
+              </div>
+            )}
+
+            {/* ── Quick mode: add to caseload ── */}
+            {mode === "quick" && (
+              <div className="quick-save-prompt">
+                <p className="quick-save-hint">
+                  Add {quickFirst || "this student"} to your caseload to save the note and
+                  bank evidence toward quarterly reports.
+                </p>
+                <div className="quick-save-fields">
+                  <input
+                    className="field-input"
+                    placeholder="School (optional)"
+                    value={quickSchool}
+                    onChange={(e) => setQuickSchool(e.target.value)}
+                  />
+                  <select
+                    className="field-select"
+                    value={quickGrade}
+                    onChange={(e) => setQuickGrade(e.target.value)}
+                  >
+                    {["K", "1", "2", "3", "4", "5", "6", "7", "8"].map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </select>
+                  <button
+                    className="compose-btn"
+                    onClick={handleQuickSave}
+                    disabled={quickSaving}
+                    style={{ flexShrink: 0 }}
+                  >
+                    {quickSaving ? "Saving…" : "Add to caseload & save →"}
+                  </button>
+                </div>
+                <button className="copy-btn" onClick={handleCopy} style={{ marginTop: 8 }}>
+                  {copied ? "✓ Copied" : "Just copy the note"}
+                </button>
+              </div>
+            )}
           </div>
         )}
 

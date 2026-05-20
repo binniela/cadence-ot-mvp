@@ -3012,6 +3012,124 @@ a {
   border-color: var(--ink-3);
 }
 
+/* ── Composer mode toggle ─────────────────────────────────────────── */
+
+.composer-mode-toggle {
+  display: flex;
+  gap: 0;
+  margin-bottom: 18px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.composer-mode-btn {
+  padding: 8px 18px;
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 600;
+  background: none;
+  border: none;
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.composer-mode-btn + .composer-mode-btn {
+  border-left: 1.5px solid var(--line-strong);
+}
+
+.composer-mode-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.composer-mode-btn--active {
+  background: var(--brand);
+  color: #fff !important;
+}
+
+.composer-mode-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── field-input (text input styled like field-select) ──────────── */
+
+.field-input {
+  width: 100%;
+  padding: 9px 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--ink);
+  font-family: var(--nexa);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.field-input::placeholder {
+  color: var(--ink-3);
+}
+
+.field-input:focus {
+  border-color: var(--brand);
+}
+
+/* ── Quick mode hint ─────────────────────────────────────────────── */
+
+.composer-quick-hint {
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin: 0 0 14px;
+  padding: 10px 14px;
+  background: var(--surface-2);
+  border-radius: 6px;
+  border-left: 3px solid var(--brand);
+  line-height: 1.5;
+}
+
+/* ── Quick-save prompt ───────────────────────────────────────────── */
+
+.quick-save-prompt {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--line-strong);
+  border-radius: 8px;
+}
+
+.quick-save-hint {
+  font-size: 13px;
+  color: var(--ink-2);
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.quick-save-fields {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.quick-save-fields .field-input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.quick-save-fields .field-select {
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.quick-save-fields .compose-btn {
+  white-space: nowrap;
+}
+
 /* ── Mic button ──────────────────────────────────────────────────────── */
 
 .mic-btn {

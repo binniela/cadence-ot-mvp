@@ -3,6 +3,79 @@ import { gemini, MODEL, geminiErrorMessage } from "@/lib/gemini";
 import { supabaseAdmin } from "@/lib/supabase";
 import type { NoteFormat, NoteOutput, SessionType, ServiceLogField, StateProgram, Student } from "@/lib/types";
 
+// Quick-start (no student record yet) service log
+function buildQuickServiceLog(
+  name: string,
+  sessionType: SessionType,
+  durationMin: number,
+): ServiceLogField[] {
+  const date = new Date().toISOString().slice(0, 10);
+  return [
+    { label: "Student", value: name || "Not specified", required: true },
+    { label: "Date of service", value: date, required: true },
+    { label: "Total minutes", value: String(durationMin), required: true },
+    { label: "Service type", value: sessionType, required: true },
+    {
+      label: "Parental Medicaid consent",
+      value: "Not verified — complete student profile before billing",
+      required: true,
+    },
+    {
+      label: "State Medicaid program",
+      value: "Set when student profile is completed",
+      required: false,
+    },
+  ];
+}
+
+// Quick-start prompt: no IEP goals on file yet
+function buildQuickPrompt(args: {
+  name: string;
+  sessionType: SessionType;
+  format: NoteFormat;
+  durationMin: number;
+  dictation: string;
+}) {
+  const { name, sessionType, format, durationMin, dictation } = args;
+  return `You are Cadence, an AI documentation assistant for school-based pediatric occupational therapists. Generate a session note from a therapist's post-session dictation. No IEP goals are on file yet for this student.
+
+CONTEXT
+Student: ${name || "Student"}
+Session type: ${sessionType}
+Duration: ${durationMin} minutes
+Format requested: ${format}
+Note: IEP goals not yet linked — generate a strong observational note without goal IDs.
+
+THERAPIST DICTATION:
+"""
+${dictation}
+"""
+
+TASK
+Return ONLY valid JSON:
+{
+  "formatted": "<the prose note in the requested format>",
+  "goal_bullets": [],
+  "flags": [
+    { "level": "error" | "warn", "message": "<compliance issue>" }
+  ]
+}
+
+RULES FOR "formatted":
+- If format is "Goal-bullets": write one bullet (•) per skill area observed, using clear clinical language even without formal goal IDs.
+- If format is "SOAP": SUBJECTIVE, OBJECTIVE, ASSESSMENT, PLAN — each section a paragraph, ALL CAPS headers.
+- If format is "DAP": DATA, ASSESSMENT, PLAN.
+- If format is "Narrative": single flowing paragraph.
+- Always include skilled-service language ("specialized", "individualized", "skilled OT", "adapted").
+
+RULES FOR "flags":
+- WARN: "No IEP goals linked — add goals to this student's profile to bank evidence toward quarterly reports."
+- WARN if dictation lacks start/stop times and no minute count.
+- WARN if dictation lacks skilled-service language.
+
+Return only the JSON object. No code fence, no preamble.`;
+}
+
 // State-specific service log field templates
 function buildServiceLog(
   student: Student,
@@ -146,12 +219,40 @@ Return only the JSON object. No code fence, no preamble.`;
 
 export async function POST(req: NextRequest) {
   try {
-    const { studentId, sessionType, format, durationMin, dictation, goalIds } = await req.json();
-    if (!studentId || !dictation) {
-      return NextResponse.json({ error: "studentId and dictation are required" }, { status: 400 });
+    const { studentId, quickName, sessionType, format, durationMin, dictation, goalIds } = await req.json();
+
+    if (!dictation) {
+      return NextResponse.json({ error: "dictation is required" }, { status: 400 });
+    }
+    if (!studentId && !quickName) {
+      return NextResponse.json({ error: "studentId or quickName is required" }, { status: 400 });
     }
 
-    // Load student + goals
+    // ── Quick-start path (no student record) ───────────────────────────
+    if (quickName && !studentId) {
+      const prompt = buildQuickPrompt({ name: quickName, sessionType, format, durationMin, dictation });
+      const response = await gemini.models.generateContent({
+        model: MODEL,
+        contents: prompt,
+        config: { responseMimeType: "application/json", temperature: 0.4 },
+      });
+      const text = response.text ?? "";
+      let parsed: Omit<NoteOutput, "service_log">;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        return NextResponse.json({ error: "Gemini returned non-JSON", raw: text.slice(0, 500) }, { status: 502 });
+      }
+      const output: NoteOutput = {
+        formatted: parsed.formatted,
+        goal_bullets: [],
+        flags: parsed.flags ?? [],
+        service_log: buildQuickServiceLog(quickName, sessionType, durationMin),
+      };
+      return NextResponse.json({ output });
+    }
+
+    // ── Existing student path ──────────────────────────────────────────
     const { data: student, error: sErr } = await supabaseAdmin
       .from("students")
       .select("*")
@@ -177,21 +278,12 @@ export async function POST(req: NextRequest) {
       goals: selectedGoals.map((g) => ({ ...g, bullets: [] })),
     };
 
-    const prompt = buildPrompt({
-      student: fullStudent,
-      sessionType,
-      format,
-      durationMin,
-      dictation,
-    });
+    const prompt = buildPrompt({ student: fullStudent, sessionType, format, durationMin, dictation });
 
     const response = await gemini.models.generateContent({
       model: MODEL,
       contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        temperature: 0.4,
-      },
+      config: { responseMimeType: "application/json", temperature: 0.4 },
     });
 
     const text = response.text ?? "";
@@ -205,10 +297,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate that goal_bullets only reference real goal IDs
+    const validGoalIds = new Set(selectedGoals.map((g) => g.id));
+    const safeGoalBullets = (parsed.goal_bullets ?? []).filter((b) => validGoalIds.has(b.goal_id));
+
     const serviceLog = buildServiceLog(fullStudent, sessionType, durationMin);
     const output: NoteOutput = {
       formatted: parsed.formatted,
-      goal_bullets: parsed.goal_bullets ?? [],
+      goal_bullets: safeGoalBullets,
       flags: parsed.flags ?? [],
       service_log: serviceLog,
     };
