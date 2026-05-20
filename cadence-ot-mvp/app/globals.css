@@ -85,9 +85,8 @@
   --nexa: "Nexa Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --editorial: "New York Large", Georgia, "Times New Roman", serif;
   --editorial-display: "New York Extra Large", Georgia, "Times New Roman", serif;
-  /* Map old vars so dashboard components stay consistent */
-  --serif: var(--nexa);
-  --serif-display: var(--nexa);
+  --serif: var(--editorial);
+  --serif-display: var(--editorial-display);
   --sans: var(--nexa);
 }
 
@@ -197,7 +196,7 @@ a {
   color: var(--ink);
   border: 1px solid var(--line-strong);
   padding: 9px 20px;
-  border-radius: 4px;
+  border-radius: 8px;
   white-space: nowrap;
   letter-spacing: 0.01em;
   transition: background 0.15s, border-color 0.15s;
@@ -319,11 +318,11 @@ a {
   background: var(--ink);
   color: var(--bg);
   font-family: var(--nexa);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0;
-  padding: 12px 20px;
-  border-radius: 2px;
+  padding: 13px 24px;
+  border-radius: 8px;
   transition: opacity 0.15s;
   white-space: nowrap;
   border: none;
@@ -335,7 +334,7 @@ a {
 }
 
 .btn-ghost {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
   color: rgba(240, 237, 229, 0.55);
   transition: color 0.15s;
@@ -440,8 +439,12 @@ a {
 }
 
 .light .btn-primary {
-  background: var(--ink-dark);
-  color: var(--bg-light-2);
+  background: var(--brand);
+  color: #fff;
+}
+
+.light .btn-primary:hover {
+  opacity: 0.88;
 }
 
 .light .btn-ghost {
@@ -641,7 +644,7 @@ a {
 .draft-panel {
   margin-top: 18px;
   border: 1px solid rgba(244, 241, 234, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   background: rgba(244, 241, 234, 0.04);
   padding: 18px;
 }
@@ -1554,9 +1557,9 @@ a {
   font-family: var(--nexa);
   font-size: 14px;
   font-weight: 700;
-  padding: 12px 24px;
+  padding: 13px 24px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   transition: opacity 0.15s;
 }
@@ -2069,13 +2072,13 @@ a {
 
 .ghost-btn {
   background: none;
-  border: 1px dashed var(--line-strong);
+  border: 1.5px dashed var(--line-strong);
   color: var(--ink-2);
   font-family: var(--nexa);
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 600;
   padding: 10px 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   align-self: flex-start;
   transition: color 0.15s, border-color 0.15s;
@@ -2729,9 +2732,41 @@ a {
 .composer-input-preview {
   background: rgba(244, 241, 234, 0.05);
   border: 1px solid rgba(244, 241, 234, 0.1);
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 12px 14px;
   margin-bottom: 14px;
+}
+
+/* Recording state — green border pulse */
+.composer-input-preview--mic {
+  border-color: rgba(78, 138, 110, 0.5);
+  background: rgba(78, 138, 110, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.preview-mic-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4e8a6e;
+  flex-shrink: 0;
+  margin-top: 5px;
+  animation: mic-pulse 1.4s ease-in-out infinite;
+}
+
+/* Copy chip shown below generated note in mock */
+.preview-copy-chip {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--brand);
+  border: 1px solid rgba(78, 138, 110, 0.35);
+  border-radius: 6px;
+  padding: 4px 10px;
+  letter-spacing: 0.01em;
 }
 
 .composer-input-text {

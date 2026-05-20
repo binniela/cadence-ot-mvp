@@ -2,11 +2,11 @@ import { NavBar } from "./components/NavBar";
 import { WaitlistForm } from "./components/WaitlistForm";
 
 const metrics = [
-  ["Time to sign daily note", "<5 min"],
-  ["Same-day signing rate target", "90%+"],
-  ["Student caseload supported", "50+"],
-  ["Goals tied to source evidence", "100%"],
-  ["Quarterly due-risk window", "5 days"],
+  ["Time to generate a note", "<60 seconds"],
+  ["Note formats", "SOAP · DAP · Goal-bullets · Narrative"],
+  ["Paste into", "Fusion, My School Therapy, or any EMR"],
+  ["Student caseload supported", "50+ students"],
+  ["Quarterly due-risk alert", "5 days advance"],
 ];
 
 export default function Home() {
@@ -22,44 +22,85 @@ export default function Home() {
         </div>
         <div className="hero__overlay" />
         <div className="hero__inner">
-          <p className="hero__label">School-based OT documentation</p>
-          <h1 className="hero__headline">Sign your session notes the same day you see the kid.</h1>
+          <p className="hero__label">School-based OT · Voice-first</p>
+          <h1 className="hero__headline">Document in the hallway, not after bedtime.</h1>
           <p className="hero__sub">
-            Cadence turns a 60-second post-session recap into a goal-anchored,
-            compliance-checked note. Stop staying late. Start signing same day.
+            Tap the mic after your session. Speak for 60 seconds. Cadence
+            returns a compliant, goal-linked note — copy it into Fusion,
+            My School Therapy, or whatever your district already uses.
           </p>
           <div className="hero__actions">
             <a href="#waitlist" className="btn-primary">Request pilot access</a>
-            <a href="/app?view=composer" className="btn-ghost">Try the composer →</a>
+            <a href="/app" className="btn-ghost">Try the composer →</a>
           </div>
           <div className="hero__proofs" aria-label="Cadence focus areas">
-            <span>Session notes</span>
-            <span>IEP goals</span>
-            <span>Medicaid logs</span>
+            <span>Voice-first</span>
+            <span>Any phone</span>
+            <span>Paste into any EMR</span>
           </div>
         </div>
       </section>
 
-      {/* ── Daily workflow ── */}
-      <section className="platform light" id="daily-notes">
-        {/* Alias for any existing #platform links */}
-        <span id="platform" aria-hidden="true" style={{ position: "absolute" }} />
+      {/* ── How it works — 3 steps ── */}
+      <section className="evidence-section light" id="how-it-works">
+        <div className="evidence-section__body">
+          <div>
+            <p className="section-label">How it works</p>
+            <h2 className="section-title evidence-section__title">
+              Three steps. No laptop required.
+            </h2>
+          </div>
+          <div className="evidence-flow">
+            <div className="evidence-step">
+              <span>01</span>
+              <h3>Tap the mic</h3>
+              <p>
+                Between pull-outs. In the hallway. In your car. Open Cadence
+                on your phone and speak naturally about what happened.
+                No template. No required structure. Plain language works.
+              </p>
+            </div>
+            <div className="evidence-step">
+              <span>02</span>
+              <h3>Get a note worth signing</h3>
+              <p>
+                Cadence generates SOAP, DAP, Goal-bullets, or Narrative —
+                your choice. IEP goals are linked, skilled-service language
+                is included, and compliance gaps are flagged before you sign.
+              </p>
+            </div>
+            <div className="evidence-step">
+              <span>03</span>
+              <h3>Paste it anywhere</h3>
+              <p>
+                One tap copies the note to your clipboard. Paste it into
+                Fusion, My School Therapy, SimplePractice, or your district&apos;s
+                system. Cadence doesn&apos;t replace anything — it just makes
+                the note content better and faster.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Product demo ── */}
+      <section className="platform" id="demo">
         <div className="platform__body">
           <div className="platform__copy">
-            <p className="section-label">The daily workflow</p>
+            <p className="section-label">The composer</p>
             <h2 className="section-title platform__title">
-              Cadence is the note copilot for school-based OT teams.
+              Speak. Review. Copy. Done in under two minutes.
             </h2>
             <p className="platform__desc">
-              Post a 60-second recap after each pull-out, push-in, or group
-              session. Cadence returns a goal-linked note in your preferred
-              format with compliance flags and a Medicaid service log —
-              ready to paste into your district&apos;s EMR.
+              Quick start takes a first name and a 60-second recap.
+              No student profile required to get a usable note.
+              Add IEP goals when you have time — every session you document
+              banks evidence toward quarterly reports automatically.
             </p>
             <div className="platform__checks">
-              <span>SOAP, DAP, Goal-bullets, or Narrative</span>
-              <span>Compliance linting on every note</span>
-              <span>Evidence banked toward quarterly reports automatically</span>
+              <span>No pre-built student profile required</span>
+              <span>Compliance flags on every note</span>
+              <span>Medicaid service log generated automatically</span>
             </div>
           </div>
 
@@ -68,36 +109,38 @@ export default function Home() {
               <span />
               <span />
               <span />
-              <div>cadence.app/composer</div>
+              <div>cadence.app/app</div>
             </div>
             <div className="product-shell__surface">
               <aside className="product-shell__rail">
                 <strong>Cadence</strong>
                 <span className="product-shell__rail-active">Composer</span>
-                <span>Caseload</span>
+                <span>Students</span>
                 <span>Quarterly</span>
               </aside>
               <div className="product-shell__main">
                 <div className="product-shell__header">
                   <div>
-                    <p>Post-session dictation</p>
-                    <h3>Liam Carter</h3>
+                    <p>Quick start</p>
+                    <h3>Liam C.</h3>
                   </div>
                   <span>Pull-out · 30 min</span>
                 </div>
-                <div className="composer-input-preview">
+                <div className="composer-input-preview composer-input-preview--mic">
+                  <span className="preview-mic-dot" />
                   <p className="composer-input-text">
-                    Started 9:32. Bead stringing, 8 of 10 independent today.
-                    Weighted lap pad — got 3.5 min seated before seeking movement…
+                    Recording… bead stringing, 8 of 10 today.
+                    Weighted lap pad — 3.5 min before seeking movement…
                   </p>
                 </div>
                 <div className="draft-panel">
                   <span className="product-shell__eyebrow">Generated · Goal-bullets</span>
                   <p>
-                    Fine-motor manipulation: Completed bead stringing independently
-                    (8/10). Functional grasp improving toward criterion. Seated
-                    tolerance: 3.5 min tabletop with weighted lap pad trial.
+                    Fine-motor: Completed bead stringing independently (8/10).
+                    Functional grasp improving. Seated tolerance: 3.5 min
+                    tabletop with weighted lap pad.
                   </p>
+                  <span className="preview-copy-chip">Copy to clipboard ↗</span>
                 </div>
               </div>
             </div>
@@ -105,52 +148,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Caseload objection ── */}
-      <section className="caseload-section" id="caseload">
+      {/* ── Not a new EMR ── */}
+      <section className="caseload-section" id="why-cadence">
         <div className="caseload-section__body">
           <div>
-            <p className="section-label">A concern we hear often</p>
+            <p className="section-label">No new system to learn</p>
             <h2 className="caseload-section__title">
-              Won&apos;t my employer just add more students?
+              Your district has a system. Cadence works alongside it.
             </h2>
           </div>
           <div className="caseload-section__copy">
             <p>
-              Faster notes don&apos;t create caseload pressure — same-day signing does.
-              The gain isn&apos;t throughput. It&apos;s closing the loop before you
-              leave the building.
+              School OTs are already managing two systems — the IEP platform
+              and the billing EMR. The last thing you need is a third.
+              Cadence generates the note content. You paste it wherever
+              your district requires.
             </p>
             <div className="caseload-points">
               <div className="caseload-point">
                 <span>01</span>
                 <div>
-                  <strong>Fewer denials, same caseload.</strong>
+                  <strong>No IT approval needed.</strong>
                   <p>
-                    Documentation-related claim denials come from late, incomplete,
-                    or weak skilled-language notes. Same-day signing with compliance
-                    flags addressed removes the rework — not the students.
+                    Open in Safari, add to your home screen, start using it.
+                    There&apos;s no district contract, no data migration, and
+                    no onboarding your supervisor.
                   </p>
                 </div>
               </div>
               <div className="caseload-point">
                 <span>02</span>
                 <div>
-                  <strong>Notes that pile up create audit risk.</strong>
+                  <strong>Works on the phone you already carry.</strong>
                   <p>
-                    A Tuesday session finished on Friday introduces recall errors,
-                    data inconsistencies, and billing exposure. Cadence closes the
-                    loop while the session is still fresh.
+                    Cadence is built mobile-first. The mic button works
+                    between sessions, in the hallway, at pickup duty.
+                    No laptop. No extra device.
                   </p>
                 </div>
               </div>
               <div className="caseload-point">
                 <span>03</span>
                 <div>
-                  <strong>The cognitive gain is the point.</strong>
+                  <strong>Notes that survive documentation audits.</strong>
                   <p>
-                    Carrying three unfinished notes through pickup and dinner is the
-                    burnout. Getting the note off your plate means your clinical
-                    thinking stays sharp for the next kid.
+                    Every generated note includes skilled-service language,
+                    IEP goal anchoring, and compliance flags for IDEA and
+                    Medicaid requirements — before you ever sign.
                   </p>
                 </div>
               </div>
@@ -159,40 +203,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── How it works ── */}
-      <section className="evidence-section light" id="evidence">
+      {/* ── Quarterly payoff ── */}
+      <section className="evidence-section light" id="quarterly">
         <div className="evidence-section__body">
           <div>
-            <p className="section-label">How it works</p>
+            <p className="section-label">For OTs who want more</p>
             <h2 className="section-title evidence-section__title">
-              The daily note builds the quarterly report.
+              Every session banks toward the quarterly report.
             </h2>
           </div>
           <div className="evidence-flow">
             <div className="evidence-step">
               <span>01</span>
-              <h3>60-second recap</h3>
+              <h3>Link your IEP goals</h3>
               <p>
-                After pull-out or push-in, type or paste what happened. No
-                template. No required structure. Plain language is fine.
+                Add a student&apos;s active goals once. Cadence maps every
+                session observation to the right goal — no manual tagging,
+                no spreadsheet tracking.
               </p>
             </div>
             <div className="evidence-step">
               <span>02</span>
-              <h3>Goal-anchored note</h3>
+              <h3>Evidence accumulates</h3>
               <p>
-                Cadence generates a SOAP, DAP, Goal-bullets, or Narrative
-                note, maps observations to active IEP goals, and flags any
-                compliance gaps.
+                Each session banks a measurable observation per goal.
+                By week eight you have a full data trail —
+                chronological, clinical, citation-ready.
               </p>
             </div>
             <div className="evidence-step">
               <span>03</span>
               <h3>Quarterly writes itself</h3>
               <p>
-                Banked observations accumulate by goal. When the report is
-                due, Cadence drafts IDEA §300.320(a)(3)-compliant progress
-                narratives with evidence citations — export to Word in one click.
+                Cadence drafts IDEA §300.320(a)(3)-compliant progress
+                narratives from your banked observations. Export to Word
+                in one click, ready for the IEP meeting.
               </p>
             </div>
           </div>
@@ -203,8 +248,8 @@ export default function Home() {
       <section className="impact-section">
         <div className="impact-section__body">
           <div className="impact-section__intro">
-            <p className="section-label">Pilot targets</p>
-            <h2>Measurable outcomes for OT teams and the students they serve.</h2>
+            <p className="section-label">By the numbers</p>
+            <h2>Built for the pace of a school-based caseload.</h2>
           </div>
           <div className="metrics-list">
             {metrics.map(([label, value]) => (
@@ -219,8 +264,6 @@ export default function Home() {
 
       {/* ── Privacy ── */}
       <section className="security-section" id="privacy">
-        {/* Alias for any existing #security links */}
-        <span id="security" aria-hidden="true" style={{ position: "absolute" }} />
         <div className="security-section__body">
           <div>
             <p className="section-label">Privacy and data handling</p>
@@ -231,15 +274,16 @@ export default function Home() {
               Cadence is built for school-based OT teams working in FERPA- and
               IDEA-governed settings. School-based OTs doing SHARS or LEA
               Medicaid billing work with data that crosses into HIPAA territory.
-              Until a BAA is in place, Cadence instructs pilot users to omit
-              student names, DOB, and direct identifiers from dictation —
-              initials and de-identified descriptions generate equally strong notes.
+              Until a BAA is in place, Cadence instructs pilot users to use
+              initials only — omit student names, DOB, and direct identifiers
+              from dictation. Initials and de-identified descriptions generate
+              equally strong notes.
             </p>
             <div className="security-grid">
               <span>FERPA-aware workflow</span>
-              <span>IDEA §300.320 compliance</span>
+              <span>IDEA §300.320 compliance flags</span>
               <span>Medicaid consent checks</span>
-              <span>Anonymize dictation (no names/DOB)</span>
+              <span>Use initials — no names in dictation</span>
               <span>No classroom recording</span>
               <span>No third-party data sales</span>
             </div>
@@ -252,7 +296,7 @@ export default function Home() {
         <div className="waitlist__inner">
           <p className="section-label">Early access</p>
           <h2 className="waitlist__title">
-            End the late nights. Start signing same day.
+            Stop documenting at home. Start signing same day.
           </h2>
           <p className="waitlist__sub">
             Pilot opens Fall 2026 for a limited cohort of school-based OT teams.
@@ -266,8 +310,8 @@ export default function Home() {
         <div className="footer__inner">
           <span className="footer__logo">Cadence</span>
           <div className="footer__links">
-            <a href="#daily-notes">Platform</a>
-            <a href="#evidence">How it works</a>
+            <a href="#how-it-works">How it works</a>
+            <a href="#why-cadence">Why Cadence</a>
             <a href="#privacy">Privacy</a>
             <a href="#waitlist">Pilot</a>
           </div>
