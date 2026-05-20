@@ -2693,6 +2693,29 @@ a {
     text-align: left;
   }
 
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 10px;
+  }
+
+  .stat-card {
+    padding: 24px 20px;
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stat-card:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
+
+  .stat-card:nth-last-child(-n+2) {
+    border-bottom: none;
+  }
+
+  .stat-card:last-child {
+    border-bottom: none;
+  }
+
   .security-section {
     padding-top: 82px;
     padding-bottom: 90px;
