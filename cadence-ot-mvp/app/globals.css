@@ -3011,3 +3011,67 @@ a {
   color: var(--ink);
   border-color: var(--ink-3);
 }
+
+/* ── Mic button ──────────────────────────────────────────────────────── */
+
+.mic-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 11px 16px;
+  background: var(--surface);
+  border: 1.5px dashed var(--line-strong);
+  border-radius: 8px;
+  color: var(--ink-2);
+  font-family: var(--nexa);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+
+.mic-btn:hover {
+  background: var(--surface-2);
+  border-color: var(--brand);
+  color: var(--brand);
+  border-style: solid;
+}
+
+.mic-btn--active {
+  background: color-mix(in srgb, var(--brand) 10%, var(--surface));
+  border: 1.5px solid var(--brand);
+  color: var(--brand);
+}
+
+.mic-btn__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.mic-btn__label {
+  flex: 1;
+  text-align: left;
+}
+
+/* Ripple pulse ring behind the button when recording */
+.mic-btn__pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  animation: mic-pulse 1.6s ease-out infinite;
+  background: color-mix(in srgb, var(--brand) 20%, transparent);
+  pointer-events: none;
+}
+
+@keyframes mic-pulse {
+  0%   { opacity: 0.5; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.04); }
+}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { Student, IEPGoal, NoteFormat, NoteOutput, SessionType } from "@/lib/types";
+import { MicButton } from "@/app/components/MicButton";
 
 type View = "students" | "composer" | "quarterly";
 
@@ -471,6 +472,11 @@ function ComposerView({
           <label className="field-label" style={{ marginBottom: 8, display: "block" }}>
             Post-session dictation
           </label>
+          <MicButton
+            onTranscript={(text) =>
+              setRaw((prev) => prev + (prev.trimEnd() ? " " : "") + text)
+            }
+          />
           <textarea
             className="composer-textarea"
             placeholder={`60 seconds of what happened. e.g. "Started 9:32, ended 10:02. Pulled L.C. for fine-motor — bead stringing, 8 of 10 today. Trialed weighted lap pad for seated tolerance, got 3.5 min before seeking movement…"`}
