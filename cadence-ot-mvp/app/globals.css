@@ -267,11 +267,11 @@ a {
 }
 
 .hero__headline {
-  font-family: var(--editorial-display);
-  font-size: clamp(48px, 6vw, 82px);
-  font-weight: 600;
-  line-height: 0.96;
-  letter-spacing: 0;
+  font-family: var(--nexa);
+  font-size: clamp(42px, 5.5vw, 76px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
   color: var(--ink);
   max-width: 640px;
   margin-bottom: 24px;
@@ -608,7 +608,7 @@ a {
 
 .product-shell__header h3 {
   color: var(--ink);
-  font-family: var(--editorial-display);
+  font-family: var(--nexa);
   font-size: 30px;
   font-weight: 600;
   line-height: 1.1;
@@ -636,7 +636,7 @@ a {
 
 .evidence-row strong {
   color: var(--ink);
-  font-family: var(--editorial-display);
+  font-family: var(--nexa);
   font-size: 22px;
   font-weight: 600;
 }
@@ -684,7 +684,7 @@ a {
 .use-cases__item {
   display: block;
   color: rgba(23, 21, 17, 0.14);
-  font-family: var(--editorial-display);
+  font-family: var(--nexa);
   font-size: clamp(34px, 4.8vw, 66px);
   font-weight: 600;
   line-height: 0.98;
@@ -753,7 +753,7 @@ a {
 
 .evidence-step h3 {
   color: var(--ink-dark);
-  font-family: var(--editorial-display);
+  font-family: var(--nexa);
   font-size: 30px;
   font-weight: 600;
   line-height: 1.08;
@@ -782,39 +782,42 @@ a {
 
 .impact-section__intro h2 {
   color: var(--ink);
-  font-family: var(--editorial-display);
-  font-size: clamp(30px, 3.8vw, 54px);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: 0;
-  max-width: 420px;
+  font-family: var(--nexa);
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 360px;
 }
 
 .metrics-list {
   border-top: 1px solid var(--line);
+  max-width: 720px;
 }
 
 .metrics-row {
-  display: grid;
-  grid-template-columns: 1fr 190px;
-  gap: 32px;
+  display: flex;
+  justify-content: space-between;
   align-items: baseline;
-  padding: 24px 0;
+  gap: 24px;
+  padding: 20px 0;
   border-bottom: 1px solid var(--line);
 }
 
 .metrics-row span {
   color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 700;
+  font-family: var(--nexa);
+  font-size: 14px;
+  font-weight: 400;
+  flex-shrink: 0;
 }
 
 .metrics-row strong {
   color: var(--ink);
-  font-family: var(--editorial-display);
-  font-size: clamp(38px, 4.8vw, 64px);
-  font-weight: 600;
-  line-height: 0.9;
+  font-family: var(--nexa);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
   letter-spacing: 0;
   text-align: right;
 }
@@ -836,11 +839,11 @@ a {
 
 .security-section h2 {
   color: var(--ink);
-  font-family: var(--editorial-display);
-  font-size: clamp(34px, 4vw, 58px);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: 0;
+  font-family: var(--nexa);
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   max-width: 520px;
 }
 
@@ -893,13 +896,13 @@ a {
 }
 
 .section-title {
-  font-family: var(--editorial-display);
-  font-size: clamp(34px, 4vw, 58px);
-  font-weight: 600;
+  font-family: var(--nexa);
+  font-size: clamp(28px, 3.2vw, 46px);
+  font-weight: 800;
   line-height: 1.1;
-  letter-spacing: 0;
+  letter-spacing: -0.025em;
   max-width: 680px;
-  margin-bottom: 64px;
+  margin-bottom: 56px;
 }
 
 .features__grid {
@@ -1051,7 +1054,7 @@ a {
 }
 
 .waitlist__title {
-  font-family: var(--editorial-display);
+  font-family: var(--nexa);
   font-size: clamp(38px, 5vw, 70px);
   font-weight: 600;
   line-height: 1.02;
@@ -2806,11 +2809,11 @@ a {
 }
 
 .caseload-section__title {
-  font-family: var(--editorial-display);
-  font-size: clamp(34px, 4vw, 58px);
-  font-weight: 600;
-  line-height: 1.08;
-  letter-spacing: 0;
+  font-family: var(--nexa);
+  font-size: clamp(24px, 2.8vw, 38px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--ink);
   max-width: 520px;
   margin-top: 16px;
