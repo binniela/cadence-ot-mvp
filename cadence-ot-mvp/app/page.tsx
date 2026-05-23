@@ -244,6 +244,73 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Trust / Privacy ── */}
+      <section className="trust-section" id="privacy">
+        <div className="trust-section__body">
+          <div className="trust-section__header">
+            <p className="section-label trust-section__label">Privacy &amp; compliance</p>
+            <h2 className="trust-section__title">
+              The AI tool you can use<br />without asking IT.
+            </h2>
+            <p className="trust-section__sub">
+              PraxisOT was designed around one constraint from day one: no student-identifying data, ever. That&rsquo;s not a feature we added — it&rsquo;s how the whole workflow works.
+            </p>
+          </div>
+          <div className="trust-grid">
+            <div className="trust-card">
+              <div className="trust-card__icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <path d="M11 2L4 5.5V10.5C4 14.6 7 18.4 11 19.5C15 18.4 18 14.6 18 10.5V5.5L11 2Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"/>
+                  <path d="M8 11L10 13L14 9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="trust-card__copy">
+                <strong>The AI never sees student data</strong>
+                <p>Names, birth dates, and student IDs are checked and blocked before anything reaches the model. Every single generation, without exception.</p>
+              </div>
+            </div>
+            <div className="trust-card">
+              <div className="trust-card__icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <rect x="3" y="3" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="1.6"/>
+                  <path d="M7 11H15M7 7.5H12M7 14.5H10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className="trust-card__copy">
+                <strong>FERPA-conscious by design</strong>
+                <p>PraxisOT doesn&rsquo;t store student records. It drafts a note. You paste it into the system your district already approves. Nothing flows the other way.</p>
+              </div>
+            </div>
+            <div className="trust-card">
+              <div className="trust-card__icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="1.6"/>
+                  <path d="M11 7V11.5L14 13.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="trust-card__copy">
+                <strong>Your note stays on your device</strong>
+                <p>The generated note lives in your browser. You copy it, you own it. PraxisOT doesn&rsquo;t retain your session content after the page closes.</p>
+              </div>
+            </div>
+            <div className="trust-card">
+              <div className="trust-card__icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <path d="M3 11H19M11 3L19 11L11 19" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div className="trust-card__copy">
+                <strong>No IT approval, no integration</strong>
+                <p>Because PraxisOT never connects to your district&rsquo;s network or EMR. It&rsquo;s a standalone draft tool. There is nothing to approve or install.</p>
+              </div>
+            </div>
+          </div>
+          <p className="trust-section__footnote">
+            PraxisOT is not a HIPAA-covered entity and does not claim FERPA compliance on your behalf. It is designed to support de-identified documentation workflows. Always follow your district&rsquo;s policies.
+          </p>
+        </div>
+      </section>
+
       {/* ── Social proof ── */}
       <section className="proof-strip">
         <div className="proof-strip__body">
@@ -266,29 +333,6 @@ export default function Home() {
             Drop your email and we&rsquo;ll reach out when your spot opens.
           </p>
           <WaitlistForm />
-        </div>
-      </section>
-
-      {/* ── Privacy ── */}
-      <section className="security-section" id="privacy">
-        <div className="security-section__body">
-          <div>
-            <p className="section-label">Privacy and data handling</p>
-            <h2>Honest about data. Built for school-based OT pilots.</h2>
-          </div>
-          <div className="security-section__copy">
-            <p>
-              PraxisOT is designed for de-identified, local-first OT documentation support. It does not require student names, DOB, student IDs, MRNs, or school-specific identifiers. AI generation may send the de-identified recap to a third-party model provider — demo users should not enter direct identifiers.
-            </p>
-            <div className="security-grid">
-              <span>FERPA-conscious workflow</span>
-              <span>Use initials or local labels only</span>
-              <span>Identifier check before AI</span>
-              <span>Copy into district-approved systems</span>
-              <span>No classroom recording required</span>
-              <span>No compliance claim without district agreements</span>
-            </div>
-          </div>
         </div>
       </section>
 
