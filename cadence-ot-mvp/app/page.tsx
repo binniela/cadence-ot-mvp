@@ -1,14 +1,6 @@
 import { NavBar } from "./components/NavBar";
 import { WaitlistForm } from "./components/WaitlistForm";
 
-const stats = [
-  ["<60s", "From dictation to copy-ready note"],
-  ["4", "Note formats: SOAP, DAP, Goal-bullets, Narrative"],
-  ["0", "Student IDs, names, or MRNs required"],
-  ["Any EMR", "Paste into Fusion, My School Therapy, or your district system"],
-  ["1-click", "Quarterly progress reports exported to Word"],
-];
-
 export default function Home() {
   return (
     <main>
@@ -25,347 +17,255 @@ export default function Home() {
           <p className="hero__label">School-based OT documentation · Voice-first</p>
           <h1 className="hero__headline">Document from the car,<br />not after bedtime.</h1>
           <p className="hero__sub">
-            Speak for 60 seconds after any session. Get a SOAP, DAP,
-            Goal-bullets, or Narrative note — copy-ready before you leave campus.
+            Speak for 60 seconds after any session. Get a copy-ready note before you leave campus.
           </p>
           <div className="hero__actions">
             <a href="#waitlist" className="btn-primary">Get early access</a>
-            <a href="/app" className="btn-ghost">Try the demo →</a>
           </div>
-          <div className="hero__proofs" aria-label="PraxisOT focus areas">
-            <span>Voice-first</span>
-            <span>Any phone</span>
-            <span>De-identified by design</span>
+
+          {/* App preview mockup */}
+          <div className="hero__app-preview">
+            <div className="app-preview__bar">
+              <span className="app-preview__dot" />
+              <span className="app-preview__dot" />
+              <span className="app-preview__dot" />
+              <span className="app-preview__url">praxisot.app/app</span>
+            </div>
+            <div className="app-preview__body">
+              <div className="app-preview__left">
+                <div className="app-preview__header">
+                  <div>
+                    <p className="app-preview__name">M.R.</p>
+                    <p className="app-preview__meta">Pull-out · 30 min · Goal-bullets</p>
+                  </div>
+                  <span className="app-preview__rec">⏺ Recording</span>
+                </div>
+                <div className="app-preview__dictation">
+                  <p>&ldquo;Bead stringing — 8 of 10 today, up from 5 last week. Weighted lap pad for seated tolerance, got 3.5 min before seeking movement break…&rdquo;</p>
+                </div>
+                <div className="app-preview__generate">Generate note →</div>
+              </div>
+              <div className="app-preview__right">
+                <span className="app-preview__tag">Generated · Goal-bullets</span>
+                <div className="app-preview__note-body">
+                  <p className="app-preview__goal">Fine Motor</p>
+                  <p className="app-preview__line">• Bead stringing independently (8/10). Improved from 5/10 prior session.</p>
+                  <p className="app-preview__goal">Seated Tolerance</p>
+                  <p className="app-preview__line">• Maintained tabletop 3.5 min with weighted lap pad before movement break.</p>
+                  <p className="app-preview__plan">Plan: Increase bead difficulty · Add bilateral task</p>
+                  <p className="app-preview__flags">Flags: None ✓</p>
+                </div>
+                <div className="app-preview__copy-chip">Copy to clipboard ↗</div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Who it's for ── */}
-      <section className="for-ots" id="for-ots">
-        <div className="for-ots__body">
-          <div className="for-ots__intro">
-            <p className="section-label">Who it&apos;s for</p>
-            <h2 className="for-ots__title">
-              Built for the school-based OT.
+      {/* ── Note Preview — before / after ── */}
+      <section className="note-preview" id="demo">
+        <div className="note-preview__body">
+          <div className="note-preview__intro">
+            <p className="section-label">See it work</p>
+            <h2 className="section-title note-preview__title">
+              60-second recap in.<br />Copy-ready note out.
             </h2>
-            <p className="for-ots__desc">
-              Caseloads of 20–35 students. Multiple campuses. SHARS or LEA-BOP
-              billing. And somehow, quarterly progress reports still need to be written.
+            <p className="note-preview__desc">
+              No templates. No structured forms. Just speak — PraxisOT handles the formatting, skilled-service language, and compliance flags.
             </p>
-            <a href="#waitlist" className="btn-ghost" style={{ display: "inline-block", marginTop: 28 }}>
-              Get early access →
-            </a>
           </div>
-          <div className="for-ots__points">
-            <div className="for-ots__point">
-              <strong>You document after hours.</strong>
-              <p>
-                Notes that should take 4 minutes take 40 because you&apos;re
-                reconstructing sessions from memory at 9 pm.
+          <div className="note-preview__panels">
+            <div className="note-preview__panel note-preview__panel--input">
+              <div className="np-panel-label">
+                <span className="np-rec-dot" />
+                Post-session dictation · ~60 sec
+              </div>
+              <p className="np-dictation">
+                &ldquo;Started 9:15, ended 9:45. Pulled M.R. for fine-motor and bilateral. Bead stringing — 8 of 10 today, up from 5 last week. Weighted lap pad for seated tolerance, got 3.5 min before seeking movement. Brief letter formation, B and D with moderate verbal cuing. Plan to increase difficulty next session.&rdquo;
               </p>
             </div>
-            <div className="for-ots__point">
-              <strong>Your EMR has no field mode.</strong>
-              <p>
-                District systems are built for a desk. You&apos;re in a
-                parking lot, a hallway, between pull-outs.
-              </p>
-            </div>
-            <div className="for-ots__point">
-              <strong>Quarterly reports are a weekend project.</strong>
-              <p>
-                Pulling together 12 weeks of session evidence manually, per
-                goal, per student — it shouldn&apos;t take this long.
-              </p>
-            </div>
-            <div className="for-ots__point">
-              <strong>Compliance language is a moving target.</strong>
-              <p>
-                IDEA §300.320, skilled-service documentation, Medicaid audit
-                trails — the requirements keep growing.
-              </p>
-            </div>
-            <div className="for-ots__point">
-              <strong>SHARS and LEA-BOP fields pre-filled.</strong>
-              <p>
-                Service log fields required for Medicaid billing — date,
-                session type, duration, eligibility, minutes delivered — are
-                generated alongside every note.
-              </p>
+
+            <div className="note-preview__arrow" aria-hidden="true">→</div>
+
+            <div className="note-preview__panel note-preview__panel--output">
+              <div className="np-panel-label">
+                <span className="np-ai-badge">AI Generated</span>
+                Goal-bullets · Pull-out · 30 min
+              </div>
+              <div className="np-note">
+                <p className="np-goal">Fine Motor</p>
+                <p className="np-bullet">• Completed bead stringing independently (8/10 trials). Improved from 5/10 prior session. Functional grasp pattern noted.</p>
+                <p className="np-goal">Seated Tolerance</p>
+                <p className="np-bullet">• Maintained tabletop activity 3.5 min with weighted lap pad before seeking movement break. Up from 2.5 min baseline.</p>
+                <p className="np-goal">Pre-Writing</p>
+                <p className="np-bullet">• Formed letters B and D with moderate verbal cuing. Skilled OT service provided to address IEP fine-motor goals.</p>
+                <div className="np-footer">
+                  <span>Plan: Increase bead difficulty · Add bilateral crossing-midline task</span>
+                  <span>Service log: Pull-out · OT · 30 min · Skilled service documented</span>
+                  <span className="np-clear">Flags: None ✓</span>
+                </div>
+              </div>
+              <button className="np-copy-btn">Copy to clipboard ↗</button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── How it works — 3 steps ── */}
-      <section className="evidence-section light" id="how-it-works">
-        <div className="evidence-section__body">
-          <div>
+      {/* ── Stats strip ── */}
+      <section className="stats-strip">
+        <div className="stats-strip__body">
+          <div className="stats-strip__stat">
+            <strong>&lt;60s</strong>
+            <span>Dictation to copy-ready note</span>
+          </div>
+          <div className="stats-strip__div" />
+          <div className="stats-strip__stat">
+            <strong>4</strong>
+            <span>Formats: SOAP · DAP · Goal-bullets · Narrative</span>
+          </div>
+          <div className="stats-strip__div" />
+          <div className="stats-strip__stat">
+            <strong>Any EMR</strong>
+            <span>Fusion · My School Therapy · SimplePractice</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── How it works — visual ── */}
+      <section className="how-visual" id="how-it-works">
+        <div className="how-visual__body">
+          <div className="how-visual__intro">
             <p className="section-label">How it works</p>
-            <h2 className="section-title evidence-section__title">
+            <h2 className="section-title how-visual__title">
               Three steps to a copy-ready school OT session note.
             </h2>
           </div>
-          <div className="evidence-flow">
-            <div className="evidence-step">
-              <span>01</span>
-              <h3>Tap the mic</h3>
-              <p>
-                Between pull-outs. In the hallway. In your car. Open PraxisOT
-                on your phone and speak naturally about what happened. Use
-                initials or a local label — keep names, DOB, and IDs out of
-                the recap.
-              </p>
-            </div>
-            <div className="evidence-step">
-              <span>02</span>
-              <h3>Get a note worth signing</h3>
-              <p>
-                PraxisOT generates SOAP, DAP, Goal-bullets, or Narrative —
-                your choice. The composer checks for obvious identifiers
-                before AI runs, adds skilled-service language, and flags
-                documentation gaps before you copy.
-              </p>
-            </div>
-            <div className="evidence-step">
-              <span>03</span>
-              <h3>Paste it anywhere</h3>
-              <p>
-                One tap copies the note to your clipboard. Paste it into
-                Fusion, My School Therapy, SimplePractice, or your
-                district&apos;s system. PraxisOT is a draft layer, not the
-                system of record.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Product demo ── */}
-      <section className="platform" id="demo">
-        <div className="platform__body">
-          <div className="platform__copy">
-            <p className="section-label">The demo</p>
-            <h2 className="section-title platform__title">
-              Dictate your session recap. Get a SOAP or Goal-bullets note in under two minutes.
-            </h2>
-            <p className="platform__desc">
-              Quick start takes initials and a 60-second recap — no student
-              profile, DOB, school name, or ID required to get a usable note.
-              Build a caseload later if you want saved notes to feed quarterly
-              reports.
-            </p>
-            <div className="platform__checks">
-              <span>No names, DOB, student IDs, or MRNs required</span>
-              <span>Identifier check before AI generation</span>
-              <span>Copy-ready before you leave campus</span>
-            </div>
-          </div>
-
-          <div className="product-shell" aria-label="PraxisOT composer preview">
-            <div className="product-shell__bar">
-              <span />
-              <span />
-              <span />
-              <div>praxisot.app/app</div>
-            </div>
-            <div className="product-shell__surface">
-              <aside className="product-shell__rail">
-                <strong>PraxisOT</strong>
-                <span className="product-shell__rail-active">Demo</span>
-                <span>Students</span>
-                <span>Quarterly</span>
-              </aside>
-              <div className="product-shell__main">
-                <div className="product-shell__header">
-                  <div>
-                    <p>Quick start</p>
-                    <h3>L.C.</h3>
+          <div className="how-visual__steps">
+            <div className="how-visual__step">
+              <div className="how-visual__screen how-visual__screen--mic">
+                <p className="hvs-eyebrow">Post-session dictation</p>
+                <div className="hvs-mic-wrap">
+                  <div className="hvs-mic-btn">
+                    <span className="hvs-mic-dot" />
                   </div>
-                  <span>Pull-out · 30 min</span>
+                  <div className="hvs-mic-ring hvs-mic-ring--1" />
+                  <div className="hvs-mic-ring hvs-mic-ring--2" />
                 </div>
-                <div className="composer-input-preview composer-input-preview--mic">
-                  <span className="preview-mic-dot" />
-                  <p className="composer-input-text">
-                    Recording… bead stringing, 8 of 10 today.
-                    Weighted lap pad — 3.5 min before seeking movement…
-                  </p>
+                <p className="hvs-hint">Recording… speak naturally</p>
+              </div>
+              <div className="how-visual__copy">
+                <span className="how-visual__num">01</span>
+                <h3>Tap the mic</h3>
+                <p>In the hallway, parking lot, or car. Use initials — no student names or IDs needed.</p>
+              </div>
+            </div>
+
+            <div className="how-visual__step">
+              <div className="how-visual__screen how-visual__screen--note">
+                <p className="hvs-eyebrow">Generated · Goal-bullets</p>
+                <div className="hvs-note-lines">
+                  <span className="hvs-goal-label">Fine Motor</span>
+                  <span className="hvs-line" />
+                  <span className="hvs-line hvs-line--short" />
+                  <span className="hvs-goal-label">Seated Tolerance</span>
+                  <span className="hvs-line" />
+                  <span className="hvs-line hvs-line--med" />
+                  <span className="hvs-flags-line">Flags: None ✓</span>
                 </div>
-                <div className="draft-panel">
-                  <span className="product-shell__eyebrow">Generated · Goal-bullets</span>
-                  <p>
-                    Fine-motor: Completed bead stringing independently (8/10).
-                    Functional grasp improving. Seated tolerance: 3.5 min
-                    tabletop with weighted lap pad.
-                  </p>
-                  <span className="preview-copy-chip">Copy to clipboard ↗</span>
+              </div>
+              <div className="how-visual__copy">
+                <span className="how-visual__num">02</span>
+                <h3>Get a note worth signing</h3>
+                <p>SOAP, DAP, Goal-bullets, or Narrative — with skilled-service language and compliance flags built in.</p>
+              </div>
+            </div>
+
+            <div className="how-visual__step">
+              <div className="how-visual__screen how-visual__screen--copy">
+                <p className="hvs-eyebrow">Ready to paste</p>
+                <div className="hvs-copy-chip">✓ Copied to clipboard</div>
+                <div className="hvs-emr-list">
+                  <span>Fusion</span>
+                  <span>My School Therapy</span>
+                  <span>SimplePractice</span>
                 </div>
+              </div>
+              <div className="how-visual__copy">
+                <span className="how-visual__num">03</span>
+                <h3>Paste it anywhere</h3>
+                <p>One tap copies the note. Paste into whatever system your district uses. No IT approval needed.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Not a new EMR ── */}
-      <section className="caseload-section" id="why-praxisot">
-        <div className="caseload-section__body">
-          <div>
-            <p className="section-label">No new system to learn</p>
-            <h2 className="caseload-section__title">
-              Works alongside Fusion, My School Therapy, and SimplePractice.
+      {/* ── Bento grid ── */}
+      <section className="bento-section" id="features">
+        <div className="bento-section__body">
+          <div className="bento-section__intro">
+            <p className="section-label">Everything you need</p>
+            <h2 className="section-title bento-section__title">
+              Built for the school-based OT caseload.
             </h2>
           </div>
-          <div className="caseload-section__copy">
-            <p>
-              School OTs are already managing two systems — the IEP platform
-              and the billing EMR. The last thing you need is a third.
-              PraxisOT generates the draft content from a de-identified recap.
-              You review it, edit it, and paste it wherever your district requires.
-            </p>
-            <div className="caseload-points">
-              <div className="caseload-point">
-                <span>01</span>
-                <div>
-                  <strong>No IT approval needed to start.</strong>
-                  <p>
-                    Open in Safari, add to your home screen, start using it
-                    today. For demos, use de-identified recaps only. Real
-                    student data belongs in a district-approved pilot with the
-                    right privacy agreements.
-                  </p>
-                </div>
-              </div>
-              <div className="caseload-point">
-                <span>02</span>
-                <div>
-                  <strong>Works on the phone you already carry.</strong>
-                  <p>
-                    PraxisOT is built mobile-first. The mic button works
-                    between sessions, in the hallway, at pickup duty.
-                    No laptop. No extra device.
-                  </p>
-                </div>
-              </div>
-              <div className="caseload-point">
-                <span>03</span>
-                <div>
-                  <strong>Notes that survive documentation audits.</strong>
-                  <p>
-                    Generated drafts include skilled-service language and
-                    review flags. PraxisOT supports FERPA-conscious workflows;
-                    it does not replace therapist review or district policy.
-                  </p>
-                </div>
-              </div>
+          <div className="bento-grid">
+            <div className="bento-card">
+              <span className="bento-card__icon">🎙</span>
+              <strong className="bento-card__label">Voice dictation</strong>
+              <p className="bento-card__desc">Speak naturally after any session. Works on any phone, anywhere on campus.</p>
+            </div>
+            <div className="bento-card">
+              <span className="bento-card__icon">📋</span>
+              <strong className="bento-card__label">4 note formats</strong>
+              <p className="bento-card__desc">SOAP, DAP, Goal-bullets, or Narrative — your district&apos;s preferred format, every time.</p>
+            </div>
+            <div className="bento-card">
+              <span className="bento-card__icon">🏫</span>
+              <strong className="bento-card__label">SHARS &amp; LEA-BOP ready</strong>
+              <p className="bento-card__desc">Medicaid billing fields pre-filled alongside every note. Audit-trail ready.</p>
+            </div>
+            <div className="bento-card">
+              <span className="bento-card__icon">📅</span>
+              <strong className="bento-card__label">Quarterly reports drafted</strong>
+              <p className="bento-card__desc">Every saved session banks evidence toward IDEA §300.320 progress narratives.</p>
+            </div>
+            <div className="bento-card">
+              <span className="bento-card__icon">🔒</span>
+              <strong className="bento-card__label">Identifier check</strong>
+              <p className="bento-card__desc">Names, DOB, and IDs flagged before anything reaches the AI. FERPA-conscious by design.</p>
+            </div>
+            <div className="bento-card">
+              <span className="bento-card__icon">📤</span>
+              <strong className="bento-card__label">Paste into any EMR</strong>
+              <p className="bento-card__desc">Copy into Fusion, My School Therapy, SimplePractice, or your district system.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Quarterly payoff ── */}
-      <section className="evidence-section light" id="quarterly">
-        <div className="evidence-section__body">
-          <div>
-            <p className="section-label">For OTs who want more</p>
-            <h2 className="section-title evidence-section__title">
-              Every session banks toward the IDEA §300.320 quarterly progress report.
-            </h2>
-          </div>
-          <div className="evidence-flow">
-            <div className="evidence-step">
-              <span>01</span>
-              <h3>Link your IEP goals</h3>
-              <p>
-                Add a student&apos;s active goals once. PraxisOT maps every
-                session observation to the right goal — no manual tagging,
-                no spreadsheet tracking.
-              </p>
-            </div>
-            <div className="evidence-step">
-              <span>02</span>
-              <h3>Evidence accumulates</h3>
-              <p>
-                Each session banks a measurable observation per goal.
-                By week eight you have a full data trail —
-                chronological, clinical, citation-ready.
-              </p>
-            </div>
-            <div className="evidence-step">
-              <span>03</span>
-              <h3>Quarterly writes itself</h3>
-              <p>
-                PraxisOT drafts IDEA §300.320(a)(3)-compliant progress
-                narratives from evidence saved with your daily notes. Export
-                to Word in one click, ready for the IEP meeting.
-              </p>
-            </div>
-          </div>
+      {/* ── Social proof ── */}
+      <section className="proof-strip">
+        <div className="proof-strip__body">
+          <p className="proof-strip__quote">
+            &ldquo;Finally something built for how we actually work — between sessions, on a phone, under 2 minutes.&rdquo;
+          </p>
+          <span className="proof-strip__attr">— School-based OT, Texas</span>
         </div>
       </section>
 
-      {/* ── FAQ ── */}
-      <section className="faq-section" id="faq">
-        <div className="faq-section__body">
-          <div className="faq-section__intro">
-            <p className="section-label">Common questions</p>
-            <h2 className="section-title faq-section__title">
-              School OT documentation, answered.
-            </h2>
-          </div>
-          <dl className="faq-list">
-            <div className="faq-item">
-              <dt className="faq-q">What documentation do I need for SHARS billing as a school OT?</dt>
-              <dd className="faq-a">Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. PraxisOT generates the note and pre-fills a service log with all required fields.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">What are the IDEA §300.320 requirements for quarterly OT progress reports?</dt>
-              <dd className="faq-a">IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student&apos;s progress toward each IEP annual goal. PraxisOT drafts per-goal narratives from the session evidence you save with daily notes.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">What should a school-based OT SOAP note include?</dt>
-              <dd className="faq-a">A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). PraxisOT generates all four sections from a 60-second post-session dictation.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">Can I use AI to generate school OT session notes?</dt>
-              <dd className="faq-a">Yes — with de-identified input. PraxisOT checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">How do I write an IEP progress note for occupational therapy?</dt>
-              <dd className="faq-a">Link each student&apos;s active IEP goals in PraxisOT. After each session, save a note that addresses those goals. PraxisOT tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">Does PraxisOT work with Fusion, My School Therapy, or SimplePractice?</dt>
-              <dd className="faq-a">PraxisOT is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">What is the difference between a SOAP note and a DAP note for OT?</dt>
-              <dd className="faq-a">A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into &ldquo;Data.&rdquo; School districts often have a preferred format; PraxisOT generates either from the same dictation.</dd>
-            </div>
-            <div className="faq-item">
-              <dt className="faq-q">How do school OTs document for LEA-BOP Medicaid billing?</dt>
-              <dd className="faq-a">LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. PraxisOT generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.</dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      {/* ── Stats ── */}
-      <section className="impact-section">
-        <div className="impact-section__body">
-          <div style={{ marginBottom: 48 }}>
-            <p className="section-label">By the numbers</p>
-            <h2 className="section-title" style={{ marginTop: 12, maxWidth: 560 }}>
-              Built for the pace of a school-based caseload.
-            </h2>
-          </div>
-          <div className="stats-grid">
-            {stats.map(([value, label]) => (
-              <div className="stat-card" key={label}>
-                <strong className="stat-card__value">{value}</strong>
-                <span className="stat-card__label">{label}</span>
-              </div>
-            ))}
-          </div>
+      {/* ── Waitlist ── */}
+      <section className="waitlist light" id="waitlist">
+        <div className="waitlist__inner">
+          <p className="section-label">Early access</p>
+          <h2 className="waitlist__title">
+            Stop documenting at home.<br />Start signing same day.
+          </h2>
+          <p className="waitlist__sub">
+            Opening Fall 2026 — limited to 50 OTs in the first cohort.<br />
+            Drop your email and we&rsquo;ll reach out when your spot opens.
+          </p>
+          <WaitlistForm />
         </div>
       </section>
 
@@ -378,13 +278,7 @@ export default function Home() {
           </div>
           <div className="security-section__copy">
             <p>
-              PraxisOT is designed for de-identified, local-first OT
-              documentation support. It does not require student names, DOB,
-              student IDs, MRNs, addresses, parent names, or school-specific
-              identifiers to generate copy-ready notes. AI generation may send
-              the de-identified recap to a third-party model provider — demo
-              users should not enter direct identifiers or rare details that
-              could point back to one student.
+              PraxisOT is designed for de-identified, local-first OT documentation support. It does not require student names, DOB, student IDs, MRNs, or school-specific identifiers. AI generation may send the de-identified recap to a third-party model provider — demo users should not enter direct identifiers.
             </p>
             <div className="security-grid">
               <span>FERPA-conscious workflow</span>
@@ -398,28 +292,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Waitlist ── */}
-      <section className="waitlist light" id="waitlist">
-        <div className="waitlist__inner">
-          <p className="section-label">Early access</p>
-          <h2 className="waitlist__title">
-            Stop documenting at home.<br />Start signing same day.
-          </h2>
-          <p className="waitlist__sub">
-            Opening Fall 2026. Drop your email and we&rsquo;ll reach out
-            when a spot opens — no spam, ever.
-          </p>
-          <WaitlistForm />
-        </div>
-      </section>
-
       <footer className="footer">
         <div className="footer__inner">
           <span className="footer__logo">PraxisOT</span>
           <div className="footer__links">
             <a href="#how-it-works">How it works</a>
-            <a href="#why-praxisot">Why PraxisOT</a>
-            <a href="#faq">FAQ</a>
+            <a href="#features">Features</a>
+            <a href="/faq">FAQ</a>
             <a href="#privacy">Privacy</a>
             <a href="#waitlist">Early Access</a>
           </div>
