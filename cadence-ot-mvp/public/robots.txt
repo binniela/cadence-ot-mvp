@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://praxisot.app/sitemap.xml
+Sitemap: https://www.praxisot.app/sitemap.xml

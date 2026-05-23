@@ -9,7 +9,7 @@ const urbanist = Urbanist({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://praxisot.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.praxisot.app";
 
 const title =
   "Cadence | School OT Documentation — SOAP Notes, SHARS & IEP Progress Reports";
