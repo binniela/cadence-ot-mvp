@@ -55,7 +55,7 @@ function buildQuickPrompt(args: {
   dictation: string;
 }) {
   const { sessionType, format, durationMin, dictation } = args;
-  return `You are Cadence, an AI documentation assistant for school-based pediatric occupational therapists. Generate a session note from a therapist's post-session dictation. No IEP goals are on file yet for this student.
+  return `You are PraxisOT, an AI documentation assistant for school-based pediatric occupational therapists. Generate a session note from a therapist's post-session dictation. No IEP goals are on file yet for this student.
 
 CONTEXT
 Student: De-identified student. Do not use or infer a name.
@@ -168,7 +168,7 @@ function buildPrompt(args: {
     )
     .join("\n");
 
-  return `You are Cadence, an AI documentation assistant for school-based pediatric occupational therapists. Generate a documentation packet from a therapist's post-session dictation.
+  return `You are PraxisOT, an AI documentation assistant for school-based pediatric occupational therapists. Generate a documentation packet from a therapist's post-session dictation.
 
 CONTEXT
 Student: De-identified student. Do not use or infer a name.

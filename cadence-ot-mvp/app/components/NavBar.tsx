@@ -32,7 +32,7 @@ export function NavBar() {
   return (
     <nav className={cls}>
       <div className="nav__inner">
-        <span className="nav__logo">Cadence</span>
+        <span className="nav__logo">PraxisOT</span>
         <div className="nav__links">
           <a href="#demo">Platform</a>
           <a href="#how-it-works">How it works</a>

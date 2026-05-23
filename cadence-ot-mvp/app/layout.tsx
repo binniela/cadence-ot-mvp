@@ -12,7 +12,7 @@ const urbanist = Urbanist({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.praxisot.app";
 
 const title =
-  "Cadence | School OT Documentation — SOAP Notes, SHARS & IEP Progress Reports";
+  "PraxisOT | School OT Documentation — SOAP Notes, SHARS & IEP Progress Reports";
 const description =
   "AI-assisted SOAP, DAP, and Goal-bullet notes for school-based OTs. Covers SHARS, LEA-BOP billing fields, IDEA §300.320 quarterly reports, and pastes into Fusion or My School Therapy.";
 
@@ -20,7 +20,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Cadence",
+    name: "PraxisOT",
     applicationCategory: "HealthApplication",
     operatingSystem: "Web, iOS, Android",
     description:
@@ -39,10 +39,10 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Cadence Health, Inc.",
+    name: "PraxisOT, Inc.",
     url: siteUrl,
     description:
-      "Developer of Cadence, a documentation tool for school-based occupational therapists",
+      "Developer of PraxisOT, a documentation tool for school-based occupational therapists",
   },
   {
     "@context": "https://schema.org",
@@ -53,7 +53,7 @@ const jsonLd = [
         name: "What documentation do I need for SHARS billing as a school OT?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. Cadence generates the note and pre-fills a service log with all required fields.",
+          text: "Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. PraxisOT generates the note and pre-fills a service log with all required fields.",
         },
       },
       {
@@ -61,7 +61,7 @@ const jsonLd = [
         name: "What are the IDEA §300.320 requirements for quarterly OT progress reports?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student's progress toward each IEP annual goal. Cadence drafts per-goal narratives from the session evidence you save with daily notes.",
+          text: "IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student's progress toward each IEP annual goal. PraxisOT drafts per-goal narratives from the session evidence you save with daily notes.",
         },
       },
       {
@@ -69,7 +69,7 @@ const jsonLd = [
         name: "What should a school-based OT SOAP note include?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). Cadence generates all four sections from a 60-second post-session dictation.",
+          text: "A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). PraxisOT generates all four sections from a 60-second post-session dictation.",
         },
       },
       {
@@ -77,7 +77,7 @@ const jsonLd = [
         name: "Can I use AI to generate school OT session notes?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes — with de-identified input. Cadence checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.",
+          text: "Yes — with de-identified input. PraxisOT checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.",
         },
       },
       {
@@ -85,15 +85,15 @@ const jsonLd = [
         name: "How do I write an IEP progress note for occupational therapy?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Link each student's active IEP goals in Cadence. After each session, save a note that addresses those goals. Cadence tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.",
+          text: "Link each student's active IEP goals in PraxisOT. After each session, save a note that addresses those goals. PraxisOT tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.",
         },
       },
       {
         "@type": "Question",
-        name: "Does Cadence work with Fusion, My School Therapy, or SimplePractice?",
+        name: "Does PraxisOT work with Fusion, My School Therapy, or SimplePractice?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Cadence is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.",
+          text: "PraxisOT is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.",
         },
       },
       {
@@ -101,7 +101,7 @@ const jsonLd = [
         name: "What is the difference between a SOAP note and a DAP note for OT?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: 'A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into "Data." School districts often have a preferred format; Cadence generates either from the same dictation.',
+          text: 'A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into "Data." School districts often have a preferred format; PraxisOT generates either from the same dictation.',
         },
       },
       {
@@ -109,7 +109,7 @@ const jsonLd = [
         name: "How do school OTs document for LEA-BOP Medicaid billing?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. Cadence generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.",
+          text: "LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. PraxisOT generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.",
         },
       },
     ],
@@ -127,13 +127,13 @@ export const metadata: Metadata = {
     title,
     description,
     url: siteUrl,
-    siteName: "Cadence",
+    siteName: "PraxisOT",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Cadence — School OT Documentation Tool",
+        alt: "PraxisOT — School OT Documentation Tool",
       },
     ],
     type: "website",
@@ -148,7 +148,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Cadence",
+    title: "PraxisOT",
   },
   other: {
     "mobile-web-app-capable": "yes",

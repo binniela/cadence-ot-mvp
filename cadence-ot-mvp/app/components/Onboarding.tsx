@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-const STORAGE_KEY = "cadence_demo_onboarded";
+const STORAGE_KEY = "praxisot_demo_onboarded";
 
 export function Onboarding() {
   const [visible, setVisible] = useState(false);
@@ -21,12 +21,12 @@ export function Onboarding() {
     <div className="onboarding-overlay" onClick={dismiss}>
       <div className="onboarding-modal" onClick={(e) => e.stopPropagation()}>
         <div>
-          <span className="onboarding-logo">Cadence</span>
+          <span className="onboarding-logo">PraxisOT</span>
           <p className="onboarding-sub">Your private demo workspace</p>
         </div>
 
         <p className="onboarding-intro">
-          Cadence is set up for de-identified demo use. Start with initials or
+          PraxisOT is set up for de-identified demo use. Start with initials or
           a local label, keep direct identifiers out of the recap, then copy the
           generated note into the system your district already uses.
         </p>

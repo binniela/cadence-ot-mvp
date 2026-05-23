@@ -32,7 +32,7 @@ export default function Home() {
             <a href="#waitlist" className="btn-primary">Get early access</a>
             <a href="/app" className="btn-ghost">Try the demo →</a>
           </div>
-          <div className="hero__proofs" aria-label="Cadence focus areas">
+          <div className="hero__proofs" aria-label="PraxisOT focus areas">
             <span>Voice-first</span>
             <span>Any phone</span>
             <span>De-identified by design</span>
@@ -111,7 +111,7 @@ export default function Home() {
               <span>01</span>
               <h3>Tap the mic</h3>
               <p>
-                Between pull-outs. In the hallway. In your car. Open Cadence
+                Between pull-outs. In the hallway. In your car. Open PraxisOT
                 on your phone and speak naturally about what happened. Use
                 initials or a local label — keep names, DOB, and IDs out of
                 the recap.
@@ -121,7 +121,7 @@ export default function Home() {
               <span>02</span>
               <h3>Get a note worth signing</h3>
               <p>
-                Cadence generates SOAP, DAP, Goal-bullets, or Narrative —
+                PraxisOT generates SOAP, DAP, Goal-bullets, or Narrative —
                 your choice. The composer checks for obvious identifiers
                 before AI runs, adds skilled-service language, and flags
                 documentation gaps before you copy.
@@ -133,7 +133,7 @@ export default function Home() {
               <p>
                 One tap copies the note to your clipboard. Paste it into
                 Fusion, My School Therapy, SimplePractice, or your
-                district&apos;s system. Cadence is a draft layer, not the
+                district&apos;s system. PraxisOT is a draft layer, not the
                 system of record.
               </p>
             </div>
@@ -162,16 +162,16 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="product-shell" aria-label="Cadence composer preview">
+          <div className="product-shell" aria-label="PraxisOT composer preview">
             <div className="product-shell__bar">
               <span />
               <span />
               <span />
-              <div>cadence.app/app</div>
+              <div>praxisot.app/app</div>
             </div>
             <div className="product-shell__surface">
               <aside className="product-shell__rail">
-                <strong>Cadence</strong>
+                <strong>PraxisOT</strong>
                 <span className="product-shell__rail-active">Demo</span>
                 <span>Students</span>
                 <span>Quarterly</span>
@@ -207,7 +207,7 @@ export default function Home() {
       </section>
 
       {/* ── Not a new EMR ── */}
-      <section className="caseload-section" id="why-cadence">
+      <section className="caseload-section" id="why-praxisot">
         <div className="caseload-section__body">
           <div>
             <p className="section-label">No new system to learn</p>
@@ -219,7 +219,7 @@ export default function Home() {
             <p>
               School OTs are already managing two systems — the IEP platform
               and the billing EMR. The last thing you need is a third.
-              Cadence generates the draft content from a de-identified recap.
+              PraxisOT generates the draft content from a de-identified recap.
               You review it, edit it, and paste it wherever your district requires.
             </p>
             <div className="caseload-points">
@@ -240,7 +240,7 @@ export default function Home() {
                 <div>
                   <strong>Works on the phone you already carry.</strong>
                   <p>
-                    Cadence is built mobile-first. The mic button works
+                    PraxisOT is built mobile-first. The mic button works
                     between sessions, in the hallway, at pickup duty.
                     No laptop. No extra device.
                   </p>
@@ -252,7 +252,7 @@ export default function Home() {
                   <strong>Notes that survive documentation audits.</strong>
                   <p>
                     Generated drafts include skilled-service language and
-                    review flags. Cadence supports FERPA-conscious workflows;
+                    review flags. PraxisOT supports FERPA-conscious workflows;
                     it does not replace therapist review or district policy.
                   </p>
                 </div>
@@ -276,7 +276,7 @@ export default function Home() {
               <span>01</span>
               <h3>Link your IEP goals</h3>
               <p>
-                Add a student&apos;s active goals once. Cadence maps every
+                Add a student&apos;s active goals once. PraxisOT maps every
                 session observation to the right goal — no manual tagging,
                 no spreadsheet tracking.
               </p>
@@ -294,7 +294,7 @@ export default function Home() {
               <span>03</span>
               <h3>Quarterly writes itself</h3>
               <p>
-                Cadence drafts IDEA §300.320(a)(3)-compliant progress
+                PraxisOT drafts IDEA §300.320(a)(3)-compliant progress
                 narratives from evidence saved with your daily notes. Export
                 to Word in one click, ready for the IEP meeting.
               </p>
@@ -315,35 +315,35 @@ export default function Home() {
           <dl className="faq-list">
             <div className="faq-item">
               <dt className="faq-q">What documentation do I need for SHARS billing as a school OT?</dt>
-              <dd className="faq-a">Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. Cadence generates the note and pre-fills a service log with all required fields.</dd>
+              <dd className="faq-a">Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. PraxisOT generates the note and pre-fills a service log with all required fields.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">What are the IDEA §300.320 requirements for quarterly OT progress reports?</dt>
-              <dd className="faq-a">IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student&apos;s progress toward each IEP annual goal. Cadence drafts per-goal narratives from the session evidence you save with daily notes.</dd>
+              <dd className="faq-a">IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student&apos;s progress toward each IEP annual goal. PraxisOT drafts per-goal narratives from the session evidence you save with daily notes.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">What should a school-based OT SOAP note include?</dt>
-              <dd className="faq-a">A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). Cadence generates all four sections from a 60-second post-session dictation.</dd>
+              <dd className="faq-a">A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). PraxisOT generates all four sections from a 60-second post-session dictation.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">Can I use AI to generate school OT session notes?</dt>
-              <dd className="faq-a">Yes — with de-identified input. Cadence checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.</dd>
+              <dd className="faq-a">Yes — with de-identified input. PraxisOT checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">How do I write an IEP progress note for occupational therapy?</dt>
-              <dd className="faq-a">Link each student&apos;s active IEP goals in Cadence. After each session, save a note that addresses those goals. Cadence tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.</dd>
+              <dd className="faq-a">Link each student&apos;s active IEP goals in PraxisOT. After each session, save a note that addresses those goals. PraxisOT tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.</dd>
             </div>
             <div className="faq-item">
-              <dt className="faq-q">Does Cadence work with Fusion, My School Therapy, or SimplePractice?</dt>
-              <dd className="faq-a">Cadence is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.</dd>
+              <dt className="faq-q">Does PraxisOT work with Fusion, My School Therapy, or SimplePractice?</dt>
+              <dd className="faq-a">PraxisOT is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">What is the difference between a SOAP note and a DAP note for OT?</dt>
-              <dd className="faq-a">A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into &ldquo;Data.&rdquo; School districts often have a preferred format; Cadence generates either from the same dictation.</dd>
+              <dd className="faq-a">A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into &ldquo;Data.&rdquo; School districts often have a preferred format; PraxisOT generates either from the same dictation.</dd>
             </div>
             <div className="faq-item">
               <dt className="faq-q">How do school OTs document for LEA-BOP Medicaid billing?</dt>
-              <dd className="faq-a">LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. Cadence generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.</dd>
+              <dd className="faq-a">LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. PraxisOT generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.</dd>
             </div>
           </dl>
         </div>
@@ -378,7 +378,7 @@ export default function Home() {
           </div>
           <div className="security-section__copy">
             <p>
-              Cadence is designed for de-identified, local-first OT
+              PraxisOT is designed for de-identified, local-first OT
               documentation support. It does not require student names, DOB,
               student IDs, MRNs, addresses, parent names, or school-specific
               identifiers to generate copy-ready notes. AI generation may send
@@ -415,15 +415,15 @@ export default function Home() {
 
       <footer className="footer">
         <div className="footer__inner">
-          <span className="footer__logo">Cadence</span>
+          <span className="footer__logo">PraxisOT</span>
           <div className="footer__links">
             <a href="#how-it-works">How it works</a>
-            <a href="#why-cadence">Why Cadence</a>
+            <a href="#why-praxisot">Why PraxisOT</a>
             <a href="#faq">FAQ</a>
             <a href="#privacy">Privacy</a>
             <a href="#waitlist">Early Access</a>
           </div>
-          <span className="footer__copy">&copy; 2026 Cadence Health, Inc.</span>
+          <span className="footer__copy">&copy; 2026 PraxisOT, Inc.</span>
         </div>
       </footer>
     </main>

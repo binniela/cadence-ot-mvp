@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Cadence Demo — School OT Note Composer",
+  title: "PraxisOT Demo — School OT Note Composer",
   description:
     "Try the school OT note composer. Dictate a 60-second recap, get a SOAP or Goal-bullets note, copy it into your EMR.",
   openGraph: {
-    title: "Cadence Demo — School OT Note Composer",
+    title: "PraxisOT Demo — School OT Note Composer",
     description:
       "Try the school OT note composer. Dictate a 60-second recap, get a SOAP or Goal-bullets note, copy it into your EMR.",
   },

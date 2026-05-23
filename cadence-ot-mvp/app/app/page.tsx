@@ -10,7 +10,7 @@ import { Onboarding } from "@/app/components/Onboarding";
 
 function getSessionId(): string {
   if (typeof window === "undefined") return "";
-  const key = "cadence_demo_session";
+  const key = "praxisot_demo_session";
   let id = localStorage.getItem(key);
   if (!id) {
     id = crypto.randomUUID();
@@ -790,7 +790,7 @@ function ComposerView({
             {mode === "existing" && student && (
               <div className="save-bar">
                 <span className="save-bar__hint">
-                  Saving stores today&apos;s note. If goals were selected, Cadence also adds
+                  Saving stores today&apos;s note. If goals were selected, PraxisOT also adds
                   evidence from this session for later reports.
                 </span>
                 <button className="compose-btn" onClick={handleSave} disabled={saving}>
@@ -1058,7 +1058,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
             <div className="empty-state">
               <p>
                 No IEP goals linked yet. Saved notes still live below; add goals from
-                Students when you want Cadence to turn future notes into report evidence.
+                Students when you want PraxisOT to turn future notes into report evidence.
               </p>
             </div>
           ) : student.goals.map((g) => (
@@ -1084,7 +1084,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
                 {g.bullets.length === 0 ? (
                   <p style={{ fontSize: 13, color: "var(--ink-3)" }}>
                     No evidence yet. Save a Composer note that addresses this goal,
-                    and Cadence will add session evidence here.
+                    and PraxisOT will add session evidence here.
                   </p>
                 ) : (
                   g.bullets.map((b) => (
@@ -1302,7 +1302,7 @@ export default function AppPage() {
       <aside className="app-sidebar">
         <div className="sidebar-brand">
           <div>
-            <span className="sidebar-logo">Cadence</span>
+            <span className="sidebar-logo">PraxisOT</span>
             <span className="sidebar-kicker">School OT notes</span>
           </div>
         </div>
@@ -1329,7 +1329,7 @@ export default function AppPage() {
       </aside>
       <header className="app-mobile-header">
         <div>
-          <span className="app-mobile-header__brand">Cadence</span>
+          <span className="app-mobile-header__brand">PraxisOT</span>
           <span className="app-mobile-header__sub">School OT notes</span>
         </div>
         <a href="/" className="app-mobile-header__link">
