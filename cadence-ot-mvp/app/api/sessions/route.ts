@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { getSessionId, verifyStudentSession } from "@/lib/session";
 import type { NoteOutput, NoteFormat, SessionType } from "@/lib/types";
 
 // Fetches session history for a student (most recent first).
 export async function GET(req: NextRequest) {
+  const sessionId = getSessionId(req);
   const { searchParams } = new URL(req.url);
   const studentId = searchParams.get("studentId");
   if (!studentId) {
     return NextResponse.json({ error: "studentId required" }, { status: 400 });
+  }
+  if (!(await verifyStudentSession(studentId, sessionId))) {
+    return NextResponse.json({ sessions: [] });
   }
   const { data, error } = await supabaseAdmin
     .from("sessions")
@@ -22,6 +27,7 @@ export async function GET(req: NextRequest) {
 // Saves a session record and appends evidence bullets to addressed goals.
 export async function POST(req: NextRequest) {
   try {
+    const sessionId = getSessionId(req);
     const body = await req.json();
     const {
       studentId,
@@ -38,6 +44,10 @@ export async function POST(req: NextRequest) {
       dictation: string;
       output: NoteOutput;
     } = body;
+
+    if (!(await verifyStudentSession(studentId, sessionId))) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
+    }
 
     // 1. Insert session
     const { data: session, error: sErr } = await supabaseAdmin

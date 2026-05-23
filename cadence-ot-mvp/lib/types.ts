@@ -53,6 +53,7 @@ export interface Student {
   minutes_delivered: number;
   last_session: string | null;
   quarterly_report_due_days: number;
+  avatar_url: string | null;
   goals: IEPGoal[];
 }
 

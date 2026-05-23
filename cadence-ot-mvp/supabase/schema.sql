@@ -8,10 +8,13 @@ drop table if exists goal_bullets cascade;
 drop table if exists sessions cascade;
 drop table if exists iep_goals cascade;
 drop table if exists students cascade;
+drop table if exists api_usage cascade;
+drop table if exists waitlist cascade;
 
 -- ── Students ─────────────────────────────────────────────────────────
 create table students (
   id uuid primary key default gen_random_uuid(),
+  session_id text not null default 'legacy',   -- demo visitor UUID from localStorage
   name text not null,
   initials text not null,
   grade text not null,
@@ -26,8 +29,10 @@ create table students (
   minutes_delivered int not null default 0,
   last_session text,
   quarterly_report_due_days int not null default 14,
+  avatar_url text,
   created_at timestamptz not null default now()
 );
+create index on students(session_id);
 
 -- ── IEP goals ────────────────────────────────────────────────────────
 create table iep_goals (
@@ -70,11 +75,30 @@ create table goal_bullets (
 );
 create index on goal_bullets(goal_id, created_at desc);
 
+-- ── API rate limiting ────────────────────────────────────────────────
+create table api_usage (
+  ip   text not null,
+  date date not null,
+  count integer not null default 0,
+  primary key (ip, date)
+);
+
+-- ── Waitlist ─────────────────────────────────────────────────────────
+create table waitlist (
+  id         uuid primary key default gen_random_uuid(),
+  email      text not null unique,
+  role       text,
+  created_at timestamptz not null default now()
+);
+create index on waitlist(created_at desc);
+
 -- ── RLS: disabled for MVP (all DB access via Next.js API + service key) ──
 alter table students       disable row level security;
 alter table iep_goals      disable row level security;
 alter table sessions       disable row level security;
 alter table goal_bullets   disable row level security;
+alter table api_usage      disable row level security;
+alter table waitlist       disable row level security;
 
 -- ── No seed data ───────────────────────────────────────────────────────
 -- Fresh MVP workspaces start empty. Add students and goals through the app,

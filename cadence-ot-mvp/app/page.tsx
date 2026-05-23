@@ -2,11 +2,11 @@ import { NavBar } from "./components/NavBar";
 import { WaitlistForm } from "./components/WaitlistForm";
 
 const stats = [
-  ["<60s", "To generate a note"],
+  ["<60s", "From dictation to copy-ready note"],
   ["4", "Note formats: SOAP, DAP, Goal-bullets, Narrative"],
-  ["Any EMR", "Paste into Fusion, My School Therapy, or your district"],
-  ["50+", "Students on a typical school caseload"],
-  ["Later", "Saved notes can become quarterly evidence"],
+  ["0", "Student IDs, names, or MRNs required"],
+  ["Any EMR", "Paste into Fusion, My School Therapy, or your district system"],
+  ["1-click", "Quarterly progress reports exported to Word"],
 ];
 
 export default function Home() {
@@ -22,21 +22,77 @@ export default function Home() {
         </div>
         <div className="hero__overlay" />
         <div className="hero__inner">
-          <p className="hero__label">School-based OT · Voice-first</p>
-          <h1 className="hero__headline">Document from the car, not after bedtime.</h1>
+          <p className="hero__label">School-based OT documentation · Voice-first</p>
+          <h1 className="hero__headline">Document from the car,<br />not after bedtime.</h1>
           <p className="hero__sub">
-            Tap the mic between sessions. Speak for 60 seconds. Cadence
-            returns a compliant, goal-linked note — copy it into Fusion,
-            My School Therapy, or whatever your district already uses.
+            Speak for 60 seconds after any session. Get a SOAP, DAP,
+            Goal-bullets, or Narrative note — copy-ready before you leave campus.
           </p>
           <div className="hero__actions">
-            <a href="#waitlist" className="btn-primary">Request pilot access</a>
-            <a href="/app" className="btn-ghost">Try the composer →</a>
+            <a href="#waitlist" className="btn-primary">Get early access</a>
+            <a href="/app" className="btn-ghost">Try the demo →</a>
           </div>
           <div className="hero__proofs" aria-label="Cadence focus areas">
             <span>Voice-first</span>
             <span>Any phone</span>
-            <span>Paste into any EMR</span>
+            <span>De-identified by design</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Who it's for ── */}
+      <section className="for-ots" id="for-ots">
+        <div className="for-ots__body">
+          <div className="for-ots__intro">
+            <p className="section-label">Who it&apos;s for</p>
+            <h2 className="for-ots__title">
+              Built for the school-based OT.
+            </h2>
+            <p className="for-ots__desc">
+              Caseloads of 20–35 students. Multiple campuses. SHARS or LEA-BOP
+              billing. And somehow, quarterly progress reports still need to be written.
+            </p>
+            <a href="#waitlist" className="btn-ghost" style={{ display: "inline-block", marginTop: 28 }}>
+              Get early access →
+            </a>
+          </div>
+          <div className="for-ots__points">
+            <div className="for-ots__point">
+              <strong>You document after hours.</strong>
+              <p>
+                Notes that should take 4 minutes take 40 because you&apos;re
+                reconstructing sessions from memory at 9 pm.
+              </p>
+            </div>
+            <div className="for-ots__point">
+              <strong>Your EMR has no field mode.</strong>
+              <p>
+                District systems are built for a desk. You&apos;re in a
+                parking lot, a hallway, between pull-outs.
+              </p>
+            </div>
+            <div className="for-ots__point">
+              <strong>Quarterly reports are a weekend project.</strong>
+              <p>
+                Pulling together 12 weeks of session evidence manually, per
+                goal, per student — it shouldn&apos;t take this long.
+              </p>
+            </div>
+            <div className="for-ots__point">
+              <strong>Compliance language is a moving target.</strong>
+              <p>
+                IDEA §300.320, skilled-service documentation, Medicaid audit
+                trails — the requirements keep growing.
+              </p>
+            </div>
+            <div className="for-ots__point">
+              <strong>SHARS and LEA-BOP fields pre-filled.</strong>
+              <p>
+                Service log fields required for Medicaid billing — date,
+                session type, duration, eligibility, minutes delivered — are
+                generated alongside every note.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -47,15 +103,8 @@ export default function Home() {
           <div>
             <p className="section-label">How it works</p>
             <h2 className="section-title evidence-section__title">
-              Three steps. No laptop required.
+              Three steps to a copy-ready school OT session note.
             </h2>
-            <div className="how-photo">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/school-ot-car-note.png"
-                alt="School occupational therapist documenting from her car between sessions"
-              />
-            </div>
           </div>
           <div className="evidence-flow">
             <div className="evidence-step">
@@ -63,8 +112,9 @@ export default function Home() {
               <h3>Tap the mic</h3>
               <p>
                 Between pull-outs. In the hallway. In your car. Open Cadence
-                on your phone and speak naturally about what happened.
-                No template. No required structure. Plain language works.
+                on your phone and speak naturally about what happened. Use
+                initials or a local label — keep names, DOB, and IDs out of
+                the recap.
               </p>
             </div>
             <div className="evidence-step">
@@ -72,8 +122,9 @@ export default function Home() {
               <h3>Get a note worth signing</h3>
               <p>
                 Cadence generates SOAP, DAP, Goal-bullets, or Narrative —
-                your choice. IEP goals are linked, skilled-service language
-                is included, and compliance gaps are flagged before you sign.
+                your choice. The composer checks for obvious identifiers
+                before AI runs, adds skilled-service language, and flags
+                documentation gaps before you copy.
               </p>
             </div>
             <div className="evidence-step">
@@ -81,9 +132,9 @@ export default function Home() {
               <h3>Paste it anywhere</h3>
               <p>
                 One tap copies the note to your clipboard. Paste it into
-                Fusion, My School Therapy, SimplePractice, or your district&apos;s
-                system. Cadence doesn&apos;t replace anything — it just makes
-                the note content better and faster.
+                Fusion, My School Therapy, SimplePractice, or your
+                district&apos;s system. Cadence is a draft layer, not the
+                system of record.
               </p>
             </div>
           </div>
@@ -94,19 +145,19 @@ export default function Home() {
       <section className="platform" id="demo">
         <div className="platform__body">
           <div className="platform__copy">
-            <p className="section-label">The composer</p>
+            <p className="section-label">The demo</p>
             <h2 className="section-title platform__title">
-              Speak. Review. Copy. Done in under two minutes.
+              Dictate your session recap. Get a SOAP or Goal-bullets note in under two minutes.
             </h2>
             <p className="platform__desc">
-              Quick start takes a first name and a 60-second recap from
-              your car, hallway, or parking lot. No student profile required
-              to get a usable note. If goals are linked later, saved notes can
-              also become evidence for quarterly reports.
+              Quick start takes initials and a 60-second recap — no student
+              profile, DOB, school name, or ID required to get a usable note.
+              Build a caseload later if you want saved notes to feed quarterly
+              reports.
             </p>
             <div className="platform__checks">
-              <span>No pre-built student profile required</span>
-              <span>Compliance flags on every note</span>
+              <span>No names, DOB, student IDs, or MRNs required</span>
+              <span>Identifier check before AI generation</span>
               <span>Copy-ready before you leave campus</span>
             </div>
           </div>
@@ -121,7 +172,7 @@ export default function Home() {
             <div className="product-shell__surface">
               <aside className="product-shell__rail">
                 <strong>Cadence</strong>
-                <span className="product-shell__rail-active">Composer</span>
+                <span className="product-shell__rail-active">Demo</span>
                 <span>Students</span>
                 <span>Quarterly</span>
               </aside>
@@ -129,7 +180,7 @@ export default function Home() {
                 <div className="product-shell__header">
                   <div>
                     <p>Quick start</p>
-                    <h3>Liam C.</h3>
+                    <h3>L.C.</h3>
                   </div>
                   <span>Pull-out · 30 min</span>
                 </div>
@@ -161,25 +212,26 @@ export default function Home() {
           <div>
             <p className="section-label">No new system to learn</p>
             <h2 className="caseload-section__title">
-              Your district has a system. Cadence works alongside it.
+              Works alongside Fusion, My School Therapy, and SimplePractice.
             </h2>
           </div>
           <div className="caseload-section__copy">
             <p>
               School OTs are already managing two systems — the IEP platform
               and the billing EMR. The last thing you need is a third.
-              Cadence generates the note content. You paste it wherever
-              your district requires.
+              Cadence generates the draft content from a de-identified recap.
+              You review it, edit it, and paste it wherever your district requires.
             </p>
             <div className="caseload-points">
               <div className="caseload-point">
                 <span>01</span>
                 <div>
-                  <strong>No IT approval needed.</strong>
+                  <strong>No IT approval needed to start.</strong>
                   <p>
-                    Open in Safari, add to your home screen, start using it.
-                    There&apos;s no district contract, no data migration, and
-                    no onboarding your supervisor.
+                    Open in Safari, add to your home screen, start using it
+                    today. For demos, use de-identified recaps only. Real
+                    student data belongs in a district-approved pilot with the
+                    right privacy agreements.
                   </p>
                 </div>
               </div>
@@ -199,9 +251,9 @@ export default function Home() {
                 <div>
                   <strong>Notes that survive documentation audits.</strong>
                   <p>
-                    Every generated note includes skilled-service language,
-                    IEP goal anchoring, and compliance flags for IDEA and
-                    Medicaid requirements — before you ever sign.
+                    Generated drafts include skilled-service language and
+                    review flags. Cadence supports FERPA-conscious workflows;
+                    it does not replace therapist review or district policy.
                   </p>
                 </div>
               </div>
@@ -216,7 +268,7 @@ export default function Home() {
           <div>
             <p className="section-label">For OTs who want more</p>
             <h2 className="section-title evidence-section__title">
-              Every session banks toward the quarterly report.
+              Every session banks toward the IDEA §300.320 quarterly progress report.
             </h2>
           </div>
           <div className="evidence-flow">
@@ -243,11 +295,57 @@ export default function Home() {
               <h3>Quarterly writes itself</h3>
               <p>
                 Cadence drafts IDEA §300.320(a)(3)-compliant progress
-                narratives from evidence saved with your daily notes. Export to Word
-                in one click, ready for the IEP meeting.
+                narratives from evidence saved with your daily notes. Export
+                to Word in one click, ready for the IEP meeting.
               </p>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="faq-section" id="faq">
+        <div className="faq-section__body">
+          <div className="faq-section__intro">
+            <p className="section-label">Common questions</p>
+            <h2 className="section-title faq-section__title">
+              School OT documentation, answered.
+            </h2>
+          </div>
+          <dl className="faq-list">
+            <div className="faq-item">
+              <dt className="faq-q">What documentation do I need for SHARS billing as a school OT?</dt>
+              <dd className="faq-a">Each SHARS session requires a skilled-service note with date, session type, duration, student eligibility, and evidence of a skilled OT service. Cadence generates the note and pre-fills a service log with all required fields.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">What are the IDEA §300.320 requirements for quarterly OT progress reports?</dt>
+              <dd className="faq-a">IDEA requires written progress reports at least as often as parents receive grade reports. Each report must describe the student&apos;s progress toward each IEP annual goal. Cadence drafts per-goal narratives from the session evidence you save with daily notes.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">What should a school-based OT SOAP note include?</dt>
+              <dd className="faq-a">A school OT SOAP note needs: Subjective (student presentation, reported concerns), Objective (measurable observations, trial data), Assessment (progress toward IEP goals, skilled-service rationale), and Plan (next session focus). Cadence generates all four sections from a 60-second post-session dictation.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">Can I use AI to generate school OT session notes?</dt>
+              <dd className="faq-a">Yes — with de-identified input. Cadence checks your recap for direct identifiers (names, DOB, student IDs) before sending anything to the AI. Use initials or a local label; keep clinical observations in; leave identifying details out.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">How do I write an IEP progress note for occupational therapy?</dt>
+              <dd className="faq-a">Link each student&apos;s active IEP goals in Cadence. After each session, save a note that addresses those goals. Cadence tags measurable observations per goal. When the quarterly window opens, it drafts an IDEA-compliant progress paragraph from that accumulated evidence.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">Does Cadence work with Fusion, My School Therapy, or SimplePractice?</dt>
+              <dd className="faq-a">Cadence is a draft layer, not a replacement. It generates a copy-ready note that you paste into whatever system your district uses — Fusion, My School Therapy, SimplePractice, or a custom district EMR. No IT approval or integration required.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">What is the difference between a SOAP note and a DAP note for OT?</dt>
+              <dd className="faq-a">A SOAP note separates Subjective, Objective, Assessment, and Plan into four sections. A DAP note uses Data, Assessment, Plan — combining subjective and objective into &ldquo;Data.&rdquo; School districts often have a preferred format; Cadence generates either from the same dictation.</dd>
+            </div>
+            <div className="faq-item">
+              <dt className="faq-q">How do school OTs document for LEA-BOP Medicaid billing?</dt>
+              <dd className="faq-a">LEA-BOP (Local Education Agency Billing Option Program) requires documentation of skilled service necessity, student eligibility, and session details. Cadence generates notes with skilled-service language and a service log that includes the fields most state LEA-BOP programs require for audit trails.</dd>
+            </div>
+          </dl>
         </div>
       </section>
 
@@ -280,21 +378,21 @@ export default function Home() {
           </div>
           <div className="security-section__copy">
             <p>
-              Cadence is built for school-based OT teams working in FERPA- and
-              IDEA-governed settings. School-based OTs doing SHARS or LEA
-              Medicaid billing work with data that crosses into HIPAA territory.
-              Until a BAA is in place, Cadence instructs pilot users to use
-              initials only — omit student names, DOB, and direct identifiers
-              from dictation. Initials and de-identified descriptions generate
-              equally strong notes.
+              Cadence is designed for de-identified, local-first OT
+              documentation support. It does not require student names, DOB,
+              student IDs, MRNs, addresses, parent names, or school-specific
+              identifiers to generate copy-ready notes. AI generation may send
+              the de-identified recap to a third-party model provider — demo
+              users should not enter direct identifiers or rare details that
+              could point back to one student.
             </p>
             <div className="security-grid">
-              <span>FERPA-aware workflow</span>
-              <span>IDEA §300.320 compliance flags</span>
-              <span>Medicaid consent checks</span>
-              <span>Use initials — no names in dictation</span>
-              <span>No classroom recording</span>
-              <span>No third-party data sales</span>
+              <span>FERPA-conscious workflow</span>
+              <span>Use initials or local labels only</span>
+              <span>Identifier check before AI</span>
+              <span>Copy into district-approved systems</span>
+              <span>No classroom recording required</span>
+              <span>No compliance claim without district agreements</span>
             </div>
           </div>
         </div>
@@ -305,13 +403,13 @@ export default function Home() {
         <div className="waitlist__inner">
           <p className="section-label">Early access</p>
           <h2 className="waitlist__title">
-            Stop documenting at home. Start signing same day.
+            Stop documenting at home.<br />Start signing same day.
           </h2>
           <p className="waitlist__sub">
-            Pilot opens Fall 2026 for a limited cohort of school-based OT teams.
+            Opening Fall 2026. Drop your email and we&rsquo;ll reach out
+            when a spot opens — no spam, ever.
           </p>
           <WaitlistForm />
-          <p className="waitlist__note">No spam. Invites go out in batches by district.</p>
         </div>
       </section>
 
@@ -321,8 +419,9 @@ export default function Home() {
           <div className="footer__links">
             <a href="#how-it-works">How it works</a>
             <a href="#why-cadence">Why Cadence</a>
+            <a href="#faq">FAQ</a>
             <a href="#privacy">Privacy</a>
-            <a href="#waitlist">Pilot</a>
+            <a href="#waitlist">Early Access</a>
           </div>
           <span className="footer__copy">&copy; 2026 Cadence Health, Inc.</span>
         </div>

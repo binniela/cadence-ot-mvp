@@ -1,29 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
-import type { Student } from "@/lib/types";
+import { getSessionId } from "@/lib/session";
+import type { GoalBullet, Student } from "@/lib/types";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const sessionId = getSessionId(req);
+
   const { data: students, error: sErr } = await supabaseAdmin
     .from("students")
     .select("*")
+    .eq("session_id", sessionId)
     .order("school")
     .order("name");
   if (sErr) return NextResponse.json({ error: sErr.message }, { status: 500 });
 
+  const studentIds = (students ?? []).map((s) => s.id);
+  if (studentIds.length === 0) {
+    return NextResponse.json({ students: [] });
+  }
+
   const { data: goals, error: gErr } = await supabaseAdmin
     .from("iep_goals")
     .select("*")
+    .in("student_id", studentIds)
     .order("position");
   if (gErr) return NextResponse.json({ error: gErr.message }, { status: 500 });
 
-  const { data: bullets, error: bErr } = await supabaseAdmin
-    .from("goal_bullets")
-    .select("*")
-    .order("created_at");
+  const goalIds = (goals ?? []).map((g) => g.id);
+  const bullets =
+    goalIds.length > 0
+      ? (
+          await supabaseAdmin
+            .from("goal_bullets")
+            .select("*")
+            .in("goal_id", goalIds)
+            .order("created_at")
+        )
+      : { data: [], error: null };
+
+  const { data: bulletRows, error: bErr } = bullets;
   if (bErr) return NextResponse.json({ error: bErr.message }, { status: 500 });
 
-  const bulletsByGoal: Record<string, typeof bullets> = {};
-  for (const b of bullets ?? []) {
+  const bulletsByGoal: Record<string, GoalBullet[]> = {};
+  for (const b of bulletRows ?? []) {
     (bulletsByGoal[b.goal_id] ||= []).push(b);
   }
 
@@ -46,6 +65,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const sessionId = getSessionId(req);
     const body = await req.json();
     const {
       name,
@@ -66,7 +86,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Auto-generate initials from name (up to 2 chars)
     const initials = name
       .trim()
       .split(/\s+/)
@@ -82,6 +101,7 @@ export async function POST(req: NextRequest) {
         initials,
         school: school.trim(),
         grade: grade ?? "3",
+        session_id: sessionId,
         eligibility: "OHI",
         medicaid_billable: false,
         state_program: "SHARS",
@@ -104,10 +124,7 @@ export async function POST(req: NextRequest) {
 
     if (goals && goals.length > 0) {
       const goalsToInsert = goals.map(
-        (
-          g: { text: string; baseline: string; criterion: string },
-          i: number,
-        ) => ({
+        (g: { text: string; baseline: string; criterion: string }, i: number) => ({
           student_id: student.id,
           text: g.text.trim(),
           baseline: g.baseline?.trim() || "Not documented",
@@ -122,7 +139,6 @@ export async function POST(req: NextRequest) {
         .insert(goalsToInsert);
 
       if (gErr) {
-        // Compensate: remove the student if goal insert fails
         await supabaseAdmin.from("students").delete().eq("id", student.id);
         return NextResponse.json({ error: gErr.message }, { status: 500 });
       }

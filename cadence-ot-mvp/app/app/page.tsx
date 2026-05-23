@@ -1,10 +1,52 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { Student, IEPGoal, NoteFormat, NoteOutput, SessionType, SessionRecord } from "@/lib/types";
 import { MicButton } from "@/app/components/MicButton";
+import { Select } from "@/app/components/Select";
+import { Onboarding } from "@/app/components/Onboarding";
 
-type View = "students" | "composer" | "quarterly";
+// ── Demo session helpers (client-only) ────────────────────────────────
+
+function getSessionId(): string {
+  if (typeof window === "undefined") return "";
+  const key = "cadence_demo_session";
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+function apiFetch(url: string, init?: RequestInit): Promise<Response> {
+  return fetch(url, {
+    ...init,
+    headers: {
+      "Content-Type": "application/json",
+      ...(init?.headers ?? {}),
+      "x-demo-session": getSessionId(),
+    },
+  });
+}
+
+type View = "students" | "demo" | "quarterly";
+
+const directIdentifierChecks: { label: string; pattern: RegExp }[] = [
+  { label: "DOB or birth date", pattern: /\b(dob|date of birth|birthdate|born)\b/i },
+  { label: "student ID or MRN", pattern: /\b(student\s*id|sid|mrn|medical record|member id|medicaid id)\b/i },
+  { label: "email", pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i },
+  { label: "phone number", pattern: /\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/ },
+  { label: "address", pattern: /\b\d{2,6}\s+[A-Za-z0-9.'-]+\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|court|ct|boulevard|blvd|way)\b/i },
+  { label: "school name", pattern: /\b[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}\s+(Elementary|Middle|High|School|Academy)\b/ },
+  { label: "teacher or classroom name", pattern: /\b(Ms\.?|Mrs\.?|Mr\.?|Dr\.?)\s+[A-Z][A-Za-z.'-]+\b/ },
+];
+
+function findDirectIdentifierIssues(text: string): string[] {
+  return directIdentifierChecks
+    .filter(({ pattern }) => pattern.test(text))
+    .map(({ label }) => label);
+}
 
 // ── Add Student Form ──────────────────────────────────────────────────
 
@@ -48,7 +90,7 @@ function AddStudentForm({
     setSaving(true);
     setErr(null);
     try {
-      const res = await fetch("/api/students", {
+      const res = await apiFetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -94,15 +136,11 @@ function AddStudentForm({
         </div>
         <div className="field" style={{ maxWidth: 120 }}>
           <label className="field-label">Grade</label>
-          <select
-            className="field-select"
+          <Select
             value={grade}
-            onChange={(e) => setGrade(e.target.value)}
-          >
-            {["K", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"].map((g) => (
-              <option key={g}>{g}</option>
-            ))}
-          </select>
+            onChange={setGrade}
+            options={["K","1","2","3","4","5","6","7","8","9","10","11","12"].map((g) => ({ value: g, label: g }))}
+          />
         </div>
       </div>
 
@@ -169,6 +207,11 @@ function AddStudentForm({
 
 // ── Students ──────────────────────────────────────────────────────────
 
+const AVATAR_COLORS = [
+  "#4e8a6e", "#3a6ea8", "#b85c38", "#7c5cbf",
+  "#c47a1a", "#2d6a4f", "#b5446e", "#5c7a8a", "#8b5e3c",
+];
+
 function StudentsView({
   students,
   onCompose,
@@ -179,6 +222,9 @@ function StudentsView({
   onRefresh: () => void;
 }) {
   const [showAdd, setShowAdd] = useState(false);
+  const [pickerStudentId, setPickerStudentId] = useState<string | null>(null);
+  const [localColors, setLocalColors] = useState<Record<string, string>>({});
+  const pickerRef = useRef<HTMLDivElement>(null);
   const today = new Date().toISOString().slice(0, 10);
 
   function notedToday(s: Student): boolean {
@@ -189,6 +235,34 @@ function StudentsView({
     setShowAdd(false);
     onRefresh();
   }
+
+  function handleAvatarClick(e: React.MouseEvent, studentId: string) {
+    e.stopPropagation();
+    setPickerStudentId((prev) => (prev === studentId ? null : studentId));
+  }
+
+  async function handleColorPick(e: React.MouseEvent, studentId: string, color: string) {
+    e.stopPropagation();
+    setLocalColors((prev) => ({ ...prev, [studentId]: color }));
+    setPickerStudentId(null);
+    await apiFetch(`/api/students/${studentId}/avatar`, {
+      method: "POST",
+      body: JSON.stringify({ color }),
+    });
+    onRefresh();
+  }
+
+  // Close picker on outside click
+  useEffect(() => {
+    if (!pickerStudentId) return;
+    function handleOutside(e: MouseEvent) {
+      if (pickerRef.current && !pickerRef.current.contains(e.target as Node)) {
+        setPickerStudentId(null);
+      }
+    }
+    document.addEventListener("mousedown", handleOutside);
+    return () => document.removeEventListener("mousedown", handleOutside);
+  }, [pickerStudentId]);
 
   return (
     <div className="db-content">
@@ -225,13 +299,39 @@ function StudentsView({
         <div className="student-list">
           {students.map((s) => {
             const done = notedToday(s);
+            const color = localColors[s.id] ?? s.avatar_url ?? null;
+            const isPickerOpen = pickerStudentId === s.id;
             return (
               <div key={s.id} className="student-row" onClick={() => onCompose(s.id)}>
                 <span
                   className={`note-dot${done ? " note-dot--done" : ""}`}
                   title={done ? "Noted today" : "Not yet noted today"}
                 />
-                <div className="student-row__avatar">{s.initials}</div>
+                <div
+                  className="student-row__avatar"
+                  style={color ? { background: color } : undefined}
+                  onClick={(e) => handleAvatarClick(e, s.id)}
+                  title="Click to pick a color"
+                >
+                  <span style={color ? { color: "#fff" } : undefined}>{s.initials}</span>
+                  {isPickerOpen && (
+                    <div
+                      className="avatar-picker"
+                      ref={pickerRef}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {AVATAR_COLORS.map((c) => (
+                        <button
+                          key={c}
+                          className={`avatar-picker__swatch${color === c ? " avatar-picker__swatch--active" : ""}`}
+                          style={{ background: c }}
+                          onClick={(e) => handleColorPick(e, s.id, c)}
+                          title={c}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div className="student-row__info">
                   <span className="student-row__name">{s.name}</span>
                   <span className="student-row__meta">
@@ -289,6 +389,7 @@ function ComposerView({
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [nudgeDismissed, setNudgeDismissed] = useState(false);
 
   const student = students.find((s) => s.id === studentId);
   const displayName =
@@ -317,9 +418,14 @@ function ComposerView({
   const canGenerate =
     raw.trim().length > 0 &&
     (mode === "quick" ? quickFirst.trim().length > 0 : !!student);
+  const privacyIssues = findDirectIdentifierIssues(raw);
 
   async function handleGenerate() {
     if (!canGenerate) return;
+    if (privacyIssues.length > 0) {
+      setErr(`Remove possible identifiers before AI generation: ${privacyIssues.join(", ")}.`);
+      return;
+    }
     setBusy(true);
     setErr(null);
     setSavedMsg(null);
@@ -343,7 +449,7 @@ function ComposerView({
               dictation: raw,
             };
 
-      const res = await fetch("/api/generate-note", {
+      const res = await apiFetch("/api/generate-note", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -372,7 +478,7 @@ function ComposerView({
     setSaving(true);
     setErr(null);
     try {
-      const res = await fetch("/api/sessions", {
+      const res = await apiFetch("/api/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -407,7 +513,7 @@ function ComposerView({
     setQuickSaving(true);
     setErr(null);
     try {
-      const sRes = await fetch("/api/students", {
+      const sRes = await apiFetch("/api/students", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -419,7 +525,7 @@ function ComposerView({
       const sData = await sRes.json();
       if (!sRes.ok) throw new Error(sData.error ?? "Failed to create student");
 
-      const nRes = await fetch("/api/sessions", {
+      const nRes = await apiFetch("/api/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -453,13 +559,15 @@ function ComposerView({
   return (
     <div className="db-content">
       <div className="db-header">
-        <h1 className="db-title">Composer</h1>
+        <h1 className="db-title">Demo</h1>
         <span className="db-subtitle">
           Dictate from the car, review, then copy the note into your EMR
         </span>
       </div>
       <div className="composer-privacy-hint">
-        Use initials only — omit student names, DOB, and MRN from dictation.
+        AI generation sends your de-identified recap to a third-party model provider.
+        Use initials or a local label only — omit names, DOB, IDs, MRNs, school names,
+        teacher names, addresses, and rare identifying details.
       </div>
       <div className="composer-layout">
         <div>
@@ -487,36 +595,30 @@ function ComposerView({
               students.length > 0 ? (
                 <div className="field">
                   <label className="field-label">Student</label>
-                  <select
-                    className="field-select"
+                  <Select
                     value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
-                  >
-                    {students.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.name} · Gr. {s.grade} · {s.school}
-                      </option>
-                    ))}
-                  </select>
+                    onChange={setStudentId}
+                    options={students.map((s) => ({ value: s.id, label: `${s.name} · Gr. ${s.grade} · ${s.school}` }))}
+                  />
                 </div>
               ) : null
             ) : (
               <>
                 <div className="field">
-                  <label className="field-label">First name</label>
+                  <label className="field-label">Initials / local label</label>
                   <input
                     className="field-input"
-                    placeholder="First"
+                    placeholder="e.g. L.C."
                     value={quickFirst}
                     onChange={(e) => setQuickFirst(e.target.value)}
                     autoFocus
                   />
                 </div>
                 <div className="field">
-                  <label className="field-label">Last name</label>
+                  <label className="field-label">Optional label</label>
                   <input
                     className="field-input"
-                    placeholder="Last (optional)"
+                    placeholder="Optional"
                     value={quickLast}
                     onChange={(e) => setQuickLast(e.target.value)}
                   />
@@ -526,42 +628,27 @@ function ComposerView({
 
             <div className="field">
               <label className="field-label">Session type</label>
-              <select
-                className="field-select"
+              <Select
                 value={sessionType}
-                onChange={(e) => setSessionType(e.target.value as SessionType)}
-              >
-                {(
-                  ["Pull-out", "Push-in", "Consult", "Group", "Eval", "Re-eval"] as SessionType[]
-                ).map((t) => (
-                  <option key={t}>{t}</option>
-                ))}
-              </select>
+                onChange={(v) => setSessionType(v as SessionType)}
+                options={(["Pull-out","Push-in","Consult","Group","Eval","Re-eval"] as SessionType[]).map((t) => ({ value: t, label: t }))}
+              />
             </div>
             <div className="field">
               <label className="field-label">Format</label>
-              <select
-                className="field-select"
+              <Select
                 value={format}
-                onChange={(e) => setFormat(e.target.value as NoteFormat)}
-              >
-                <option>Goal-bullets</option>
-                <option>SOAP</option>
-                <option>DAP</option>
-                <option>Narrative</option>
-              </select>
+                onChange={(v) => setFormat(v as NoteFormat)}
+                options={["Goal-bullets","SOAP","DAP","Narrative"].map((f) => ({ value: f, label: f }))}
+              />
             </div>
             <div className="field">
               <label className="field-label">Duration (min)</label>
-              <select
-                className="field-select"
-                value={duration}
-                onChange={(e) => setDuration(Number(e.target.value))}
-              >
-                {[15, 20, 30, 45, 60].map((d) => (
-                  <option key={d}>{d}</option>
-                ))}
-              </select>
+              <Select
+                value={String(duration)}
+                onChange={(v) => setDuration(Number(v))}
+                options={[15,20,30,45,60].map((d) => ({ value: String(d), label: `${d} min` }))}
+              />
             </div>
           </div>
 
@@ -594,8 +681,9 @@ function ComposerView({
           {/* ── Quick mode hint ── */}
           {mode === "quick" && (
             <p className="composer-quick-hint">
-              No setup needed — get the note while the session is still fresh. Add goals
-              later if you want saved notes to feed quarterly reports.
+              No setup needed — get the note while the session is still fresh.
+              Keep the recap de-identified; add goals later only if you want saved
+              notes to feed quarterly reports.
             </p>
           )}
 
@@ -609,10 +697,34 @@ function ComposerView({
           />
           <textarea
             className="composer-textarea"
-            placeholder={`60 seconds of what happened. e.g. "Started 9:32, ended 10:02. Pulled L.C. for fine-motor — bead stringing, 8 of 10 today. Trialed weighted lap pad for seated tolerance, got 3.5 min before seeking movement…"`}
+            placeholder={`60 seconds of what happened. e.g. "Started 9:32, ended 10:02. Fine-motor — bead stringing, 8 of 10 today. Trialed weighted lap pad for seated tolerance, got 3.5 min before seeking movement…"`}
             value={raw}
             onChange={(e) => setRaw(e.target.value)}
           />
+          {privacyIssues.length > 0 && (
+            <p className="privacy-warning">
+              Possible identifier detected: {privacyIssues.join(", ")}. Remove it before generating.
+            </p>
+          )}
+          {!raw && (
+            <button
+              type="button"
+              className="ghost-btn"
+              style={{ fontSize: 12, marginBottom: 8 }}
+              onClick={() =>
+                setRaw(
+                  "Started 9:15, ended 9:45. Pulled M.R. for fine-motor and bilateral coordination. " +
+                  "Scissors task: cut along curved line, 6 of 8 trials with minimal hand-over-hand assist, improvement from last week (4/8). " +
+                  "Therapy putty for grip strength, 3 sets of 10 reps, tolerated full session without fatigue. " +
+                  "Seated tolerance at tabletop 4 minutes before seeking movement break — up from 2.5 min two weeks ago. " +
+                  "Brief letter formation task, formed B and D with moderate verbal cuing. " +
+                  "Student was engaged, responded well to visual schedule. Plan: increase scissor difficulty next session, add bilateral task."
+                )
+              }
+            >
+              Try an example →
+            </button>
+          )}
           <button
             className="compose-btn"
             onClick={handleGenerate}
@@ -701,15 +813,12 @@ function ComposerView({
                     value={quickSchool}
                     onChange={(e) => setQuickSchool(e.target.value)}
                   />
-                  <select
-                    className="field-select"
+                  <Select
                     value={quickGrade}
-                    onChange={(e) => setQuickGrade(e.target.value)}
-                  >
-                    {["K", "1", "2", "3", "4", "5", "6", "7", "8"].map((g) => (
-                      <option key={g}>{g}</option>
-                    ))}
-                  </select>
+                    onChange={setQuickGrade}
+                    options={["K","1","2","3","4","5","6","7","8"].map((g) => ({ value: g, label: g }))}
+                    style={{ minWidth: 80 }}
+                  />
                   <button
                     className="compose-btn"
                     onClick={handleQuickSave}
@@ -724,6 +833,22 @@ function ComposerView({
                 </button>
               </div>
             )}
+          </div>
+        )}
+
+        {output && !nudgeDismissed && (
+          <div className="waitlist-nudge">
+            <span className="waitlist-nudge__text">Like what you see?</span>
+            <a href="/#waitlist" className="waitlist-nudge__link">
+              Get early access →
+            </a>
+            <button
+              className="waitlist-nudge__dismiss"
+              onClick={() => setNudgeDismissed(true)}
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -780,7 +905,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
   async function draftParagraph(goal: IEPGoal): Promise<boolean> {
     setDrafting(goal.id);
     try {
-      const res = await fetch("/api/quarterly-draft", {
+      const res = await apiFetch("/api/quarterly-draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goalId: goal.id }),
@@ -801,7 +926,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
   async function saveDraft(goalId: string, text: string) {
     setSaving(goalId);
     try {
-      await fetch("/api/quarterly-draft/save", {
+      await apiFetch("/api/quarterly-draft/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ goalId, paragraph: text }),
@@ -831,7 +956,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
     setExporting(true);
     setErr(null);
     try {
-      const res = await fetch("/api/quarterly-export", {
+      const res = await apiFetch("/api/quarterly-export", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ studentId: student.id, paragraphs: drafted }),
@@ -1090,7 +1215,7 @@ function QuarterlyView({ students }: { students: Student[] }) {
 // ── Root ──────────────────────────────────────────────────────────────
 
 export default function AppPage() {
-  const [view, setView] = useState<View>("composer");
+  const [view, setView] = useState<View>("demo");
   const [students, setStudents] = useState<Student[]>([]);
   const [activeStudentId, setActiveStudentId] = useState<string>("");
   const [loading, setLoading] = useState(true);
@@ -1098,7 +1223,7 @@ export default function AppPage() {
 
   const fetchStudents = useCallback(async () => {
     try {
-      const res = await fetch("/api/students");
+      const res = await apiFetch("/api/students");
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Failed to load");
       setStudents(data.students);
@@ -1113,6 +1238,11 @@ export default function AppPage() {
   }, [activeStudentId]);
 
   useEffect(() => {
+    apiFetch("/api/demo-session", { method: "POST" }).finally(() => fetchStudents());
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Re-fetch when fetchStudents identity changes (e.g. activeStudentId changed)
+  useEffect(() => {
     fetchStudents();
   }, [fetchStudents]);
 
@@ -1120,15 +1250,15 @@ export default function AppPage() {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
     const v = params.get("view");
-    if (v === "composer" || v === "students" || v === "quarterly") {
+    if (v === "demo" || v === "students" || v === "quarterly") {
       setView(v as View);
     }
   }, []);
 
   const navItems: { id: View; label: string; icon: React.ReactNode }[] = [
     {
-      id: "composer",
-      label: "Composer",
+      id: "demo",
+      label: "Demo",
       icon: (
         <svg viewBox="0 0 20 20" aria-hidden="true">
           <path d="M6 3.5h5.5L15 7v9.5H6z" />
@@ -1162,10 +1292,12 @@ export default function AppPage() {
 
   function openComposer(studentId: string) {
     setActiveStudentId(studentId);
-    setView("composer");
+    setView("demo");
   }
 
   return (
+    <>
+    <Onboarding />
     <div className="app-shell light-app">
       <aside className="app-sidebar">
         <div className="sidebar-brand">
@@ -1195,6 +1327,15 @@ export default function AppPage() {
           </a>
         </div>
       </aside>
+      <header className="app-mobile-header">
+        <div>
+          <span className="app-mobile-header__brand">Cadence</span>
+          <span className="app-mobile-header__sub">School OT notes</span>
+        </div>
+        <a href="/" className="app-mobile-header__link">
+          Site
+        </a>
+      </header>
       <main className="app-main">
         {loading && (
           <div className="db-content">
@@ -1219,7 +1360,7 @@ export default function AppPage() {
                 onRefresh={fetchStudents}
               />
             )}
-            {view === "composer" && (
+            {view === "demo" && (
               <ComposerView
                 students={students}
                 defaultStudentId={activeStudentId || students[0]?.id || ""}
@@ -1235,15 +1376,15 @@ export default function AppPage() {
       {/* ── Mobile bottom nav (hidden on desktop via CSS) ── */}
       <nav className="app-bottom-nav">
         <button
-          className={`app-bottom-nav__item${view === "composer" ? " app-bottom-nav__item--active" : ""}`}
-          onClick={() => setView("composer")}
+          className={`app-bottom-nav__item${view === "demo" ? " app-bottom-nav__item--active" : ""}`}
+          onClick={() => setView("demo")}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
             <path d="M5 3h9l4 4v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
             <path d="M14 3v4h4" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
             <path d="M8 11h6M8 14.5h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           </svg>
-          <span>Composer</span>
+          <span>Demo</span>
         </button>
         <button
           className={`app-bottom-nav__item${view === "students" ? " app-bottom-nav__item--active" : ""}`}
@@ -1267,5 +1408,6 @@ export default function AppPage() {
         </button>
       </nav>
     </div>
+    </>
   );
 }

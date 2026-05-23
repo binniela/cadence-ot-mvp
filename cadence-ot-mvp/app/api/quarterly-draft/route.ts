@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gemini, MODEL, geminiErrorMessage } from "@/lib/gemini";
 import { supabaseAdmin } from "@/lib/supabase";
+import { checkRateLimit } from "@/lib/ratelimit";
+import { getSessionId, verifyGoalSession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
+    if (!(await checkRateLimit(ip))) {
+      return NextResponse.json(
+        { error: "Daily generation limit reached. Try again tomorrow." },
+        { status: 429 },
+      );
+    }
+
+    const sessionId = getSessionId(req);
     const { goalId } = await req.json();
     if (!goalId) {
       return NextResponse.json({ error: "goalId required" }, { status: 400 });
+    }
+    if (!(await verifyGoalSession(goalId, sessionId))) {
+      return NextResponse.json({ error: "Goal not found" }, { status: 404 });
     }
 
     const { data: goal, error: gErr } = await supabaseAdmin

@@ -37,9 +37,9 @@ export function NavBar() {
           <a href="#demo">Platform</a>
           <a href="#how-it-works">How it works</a>
           <a href="#privacy">Privacy</a>
-          <a href="#waitlist">Pilot</a>
+          <a href="#waitlist">Early Access</a>
         </div>
-        <a href="/app?view=composer" className="nav__cta">Open composer →</a>
+        <a href="#waitlist" className="nav__cta">Get early access →</a>
       </div>
     </nav>
   );

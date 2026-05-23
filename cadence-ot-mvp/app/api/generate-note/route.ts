@@ -1,7 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gemini, MODEL, geminiErrorMessage } from "@/lib/gemini";
 import { supabaseAdmin } from "@/lib/supabase";
+import { checkRateLimit } from "@/lib/ratelimit";
+import { getSessionId, verifyStudentSession } from "@/lib/session";
 import type { NoteFormat, NoteOutput, SessionType, ServiceLogField, StateProgram, Student } from "@/lib/types";
+
+const directIdentifierChecks: { label: string; pattern: RegExp }[] = [
+  { label: "DOB or birth date", pattern: /\b(dob|date of birth|birthdate|born)\b/i },
+  { label: "student ID or MRN", pattern: /\b(student\s*id|sid|mrn|medical record|member id|medicaid id)\b/i },
+  { label: "email", pattern: /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i },
+  { label: "phone number", pattern: /\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/ },
+  { label: "address", pattern: /\b\d{2,6}\s+[A-Za-z0-9.'-]+\s+(street|st|avenue|ave|road|rd|drive|dr|lane|ln|court|ct|boulevard|blvd|way)\b/i },
+  { label: "school name", pattern: /\b[A-Z][A-Za-z.'-]+(?:\s+[A-Z][A-Za-z.'-]+){0,3}\s+(Elementary|Middle|High|School|Academy)\b/ },
+  { label: "teacher or classroom name", pattern: /\b(Ms\.?|Mrs\.?|Mr\.?|Dr\.?)\s+[A-Z][A-Za-z.'-]+\b/ },
+];
+
+function findDirectIdentifierIssues(text: string): string[] {
+  return directIdentifierChecks
+    .filter(({ pattern }) => pattern.test(text))
+    .map(({ label }) => label);
+}
 
 // Quick-start (no student record yet) service log
 function buildQuickServiceLog(
@@ -36,11 +54,11 @@ function buildQuickPrompt(args: {
   durationMin: number;
   dictation: string;
 }) {
-  const { name, sessionType, format, durationMin, dictation } = args;
+  const { sessionType, format, durationMin, dictation } = args;
   return `You are Cadence, an AI documentation assistant for school-based pediatric occupational therapists. Generate a session note from a therapist's post-session dictation. No IEP goals are on file yet for this student.
 
 CONTEXT
-Student: ${name || "Student"}
+Student: De-identified student. Do not use or infer a name.
 Session type: ${sessionType}
 Duration: ${durationMin} minutes
 Format requested: ${format}
@@ -153,8 +171,7 @@ function buildPrompt(args: {
   return `You are Cadence, an AI documentation assistant for school-based pediatric occupational therapists. Generate a documentation packet from a therapist's post-session dictation.
 
 CONTEXT
-Student: ${student.name} (Grade ${student.grade}, ${student.school})
-Eligibility: ${student.eligibility}
+Student: De-identified student. Do not use or infer a name.
 State Medicaid program: ${student.state_program}
 Parental Medicaid consent on file: ${student.parental_medicaid_consent ? "YES" : "NO"}
 IEP service minutes this quarter: ${student.minutes_delivered}/${student.minutes_prescribed}
@@ -219,13 +236,33 @@ Return only the JSON object. No code fence, no preamble.`;
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
+    if (!(await checkRateLimit(ip))) {
+      return NextResponse.json(
+        { error: "Daily generation limit reached. Try again tomorrow." },
+        { status: 429 },
+      );
+    }
+
+    const sessionId = getSessionId(req);
     const { studentId, quickName, sessionType, format, durationMin, dictation, goalIds } = await req.json();
 
     if (!dictation) {
       return NextResponse.json({ error: "dictation is required" }, { status: 400 });
     }
+    const privacyIssues = findDirectIdentifierIssues(dictation);
+    if (privacyIssues.length > 0) {
+      return NextResponse.json(
+        { error: `Remove possible identifiers before AI generation: ${privacyIssues.join(", ")}.` },
+        { status: 422 },
+      );
+    }
     if (!studentId && !quickName) {
       return NextResponse.json({ error: "studentId or quickName is required" }, { status: 400 });
+    }
+
+    if (studentId && !(await verifyStudentSession(studentId, sessionId))) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
     // ── Quick-start path (no student record) ───────────────────────────

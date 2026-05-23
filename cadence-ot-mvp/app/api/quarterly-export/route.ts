@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Document, Packer, Paragraph, HeadingLevel, TextRun } from "docx";
 import { supabaseAdmin } from "@/lib/supabase";
+import { getSessionId, verifyStudentSession } from "@/lib/session";
 
 export async function POST(req: NextRequest) {
   try {
+    const sessionId = getSessionId(req);
     const { studentId, paragraphs }: { studentId: string; paragraphs: Record<string, string> } =
       await req.json();
     if (!studentId || !paragraphs) {
       return NextResponse.json({ error: "studentId and paragraphs required" }, { status: 400 });
+    }
+    if (!(await verifyStudentSession(studentId, sessionId))) {
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
     const { data: student } = await supabaseAdmin

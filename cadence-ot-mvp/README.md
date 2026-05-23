@@ -1,12 +1,13 @@
 # Cadence School OT MVP
 
-Cadence is a Next.js MVP for school-based occupational therapists who need to finish daily documentation between sessions, often from a phone in the hallway, parking lot, or car. It is intentionally scoped as an EMR-adjacent layer: generate a defensible note, flag documentation gaps, and copy the result into the district's existing EMR.
+Cadence is a Next.js MVP for school-based occupational therapists who need to finish daily documentation between sessions, often from a phone in the hallway, parking lot, or car. It is intentionally scoped as an EMR-adjacent layer: turn de-identified session recaps into defensible notes, flag documentation gaps, and copy the result into the district's existing EMR.
 
 ## What is built
 
-- Quick-start note composer for on-the-fly school OT documentation.
+- Quick-start note composer for on-the-fly, de-identified school OT documentation.
 - Voice or typed post-session recap input.
 - Gemini-generated SOAP, DAP, Goal-bullets, or Narrative notes.
+- Identifier checks before AI generation for obvious DOB, ID, MRN, address, school, teacher, email, and phone patterns.
 - Compliance flags and service-log fields for review before copying to the EMR.
 - Optional student profiles and IEP goals.
 - Saved session-note history by student.
@@ -37,7 +38,7 @@ The original static prototype remains in `index.html` as a reference artifact, b
 
 ## Important scope notes
 
-This MVP sends note-generation requests to Gemini. Use fake or de-identified data only unless the deployment has appropriate privacy, consent, and contracting controls in place.
+This MVP sends de-identified note-generation requests to Gemini. Do not enter student names, DOB, IDs, MRNs, addresses, school names, teacher names, parent names, or rare identifying details unless the deployment has appropriate privacy, consent, and contracting controls in place.
 
 Production would add authentication, audit logs, encryption, user/district settings, consent workflow, transcript-retention controls, provider privacy review, and EMR-specific copy or integration adapters.
 
