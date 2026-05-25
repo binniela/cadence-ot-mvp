@@ -23,42 +23,6 @@ export default function Home() {
             <a href="#waitlist" className="btn-primary">Get early access</a>
           </div>
 
-          {/* App preview mockup */}
-          <div className="hero__app-preview">
-            <div className="app-preview__bar">
-              <span className="app-preview__dot" />
-              <span className="app-preview__dot" />
-              <span className="app-preview__dot" />
-              <span className="app-preview__url">praxisot.app/app</span>
-            </div>
-            <div className="app-preview__body">
-              <div className="app-preview__left">
-                <div className="app-preview__header">
-                  <div>
-                    <p className="app-preview__name">M.R.</p>
-                    <p className="app-preview__meta">Pull-out · 30 min · Goal-bullets</p>
-                  </div>
-                  <span className="app-preview__rec">⏺ Recording</span>
-                </div>
-                <div className="app-preview__dictation">
-                  <p>&ldquo;Bead stringing — 8 of 10 today, up from 5 last week. Weighted lap pad for seated tolerance, got 3.5 min before seeking movement break…&rdquo;</p>
-                </div>
-                <div className="app-preview__generate">Generate note →</div>
-              </div>
-              <div className="app-preview__right">
-                <span className="app-preview__tag">Generated · Goal-bullets</span>
-                <div className="app-preview__note-body">
-                  <p className="app-preview__goal">Fine Motor</p>
-                  <p className="app-preview__line">• Bead stringing independently (8/10). Improved from 5/10 prior session.</p>
-                  <p className="app-preview__goal">Seated Tolerance</p>
-                  <p className="app-preview__line">• Maintained tabletop 3.5 min with weighted lap pad before movement break.</p>
-                  <p className="app-preview__plan">Plan: Increase bead difficulty · Add bilateral task</p>
-                  <p className="app-preview__flags">Flags: None ✓</p>
-                </div>
-                <div className="app-preview__copy-chip">Copy to clipboard ↗</div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -74,39 +38,15 @@ export default function Home() {
               No templates. No structured forms. Just speak — PraxisOT handles the formatting, skilled-service language, and compliance flags.
             </p>
           </div>
-          <div className="note-preview__panels">
-            <div className="note-preview__panel note-preview__panel--input">
-              <div className="np-panel-label">
-                <span className="np-rec-dot" />
-                Post-session dictation · ~60 sec
-              </div>
-              <p className="np-dictation">
-                &ldquo;Started 9:15, ended 9:45. Pulled M.R. for fine-motor and bilateral. Bead stringing — 8 of 10 today, up from 5 last week. Weighted lap pad for seated tolerance, got 3.5 min before seeking movement. Brief letter formation, B and D with moderate verbal cuing. Plan to increase difficulty next session.&rdquo;
-              </p>
-            </div>
-
-            <div className="note-preview__arrow" aria-hidden="true">→</div>
-
-            <div className="note-preview__panel note-preview__panel--output">
-              <div className="np-panel-label">
-                <span className="np-ai-badge">AI Generated</span>
-                Goal-bullets · Pull-out · 30 min
-              </div>
-              <div className="np-note">
-                <p className="np-goal">Fine Motor</p>
-                <p className="np-bullet">• Completed bead stringing independently (8/10 trials). Improved from 5/10 prior session. Functional grasp pattern noted.</p>
-                <p className="np-goal">Seated Tolerance</p>
-                <p className="np-bullet">• Maintained tabletop activity 3.5 min with weighted lap pad before seeking movement break. Up from 2.5 min baseline.</p>
-                <p className="np-goal">Pre-Writing</p>
-                <p className="np-bullet">• Formed letters B and D with moderate verbal cuing. Skilled OT service provided to address IEP fine-motor goals.</p>
-                <div className="np-footer">
-                  <span>Plan: Increase bead difficulty · Add bilateral crossing-midline task</span>
-                  <span>Service log: Pull-out · OT · 30 min · Skilled service documented</span>
-                  <span className="np-clear">Flags: None ✓</span>
-                </div>
-              </div>
-              <button className="np-copy-btn">Copy to clipboard ↗</button>
-            </div>
+          <div className="demo-video-wrap">
+            <video
+              className="demo-video"
+              src="/app-demo.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
           </div>
         </div>
       </section>

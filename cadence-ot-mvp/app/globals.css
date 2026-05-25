@@ -1115,7 +1115,7 @@ a {
 /* ── Waitlist ─────────────────────────────────────────────────────────── */
 
 .waitlist {
-  padding: 124px 40px;
+  padding: 80px 40px;
   text-align: center;
 }
 
@@ -4671,16 +4671,21 @@ a {
 .note-preview {
   width: 100%;
   padding: 100px 40px;
-  background: var(--bg-light);
+  background: #f7f0e6;
 }
 
 .note-preview__body {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
 }
 
 .note-preview__intro {
-  margin-bottom: 56px;
+  margin-bottom: 0;
+  align-self: center;
 }
 
 .note-preview__title {
@@ -4847,6 +4852,34 @@ a {
     transform: rotate(90deg);
     margin: 0;
     padding: 4px 0;
+  }
+}
+
+/* ── Demo video ──────────────────────────────────────────────────────── */
+
+.demo-video-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.demo-video {
+  display: block;
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  border-radius: 28px;
+  box-shadow: 0 16px 48px -8px rgba(60,50,30,0.18);
+}
+
+@media (max-width: 768px) {
+  .note-preview__body {
+    grid-template-columns: 1fr;
+  }
+  .demo-video-wrap {
+    justify-content: center;
+  }
+  .demo-video {
+    max-width: 320px;
   }
 }
 
@@ -5289,8 +5322,8 @@ a {
 /* ── Waitlist — bigger, more prominent ───────────────────────────────── */
 
 .waitlist__inner {
-  padding-top: 96px;
-  padding-bottom: 96px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .waitlist__title {
