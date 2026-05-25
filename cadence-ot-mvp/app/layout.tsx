@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Urbanist } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const urbanist = Urbanist({
@@ -179,6 +180,7 @@ export default function RootLayout({
     <html lang="en" className={urbanist.variable}>
       <body suppressHydrationWarning>
         {children}
+        <Analytics />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
