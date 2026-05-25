@@ -34,12 +34,13 @@ export function NavBar() {
       <div className="nav__inner">
         <span className="nav__logo">PraxisOT</span>
         <div className="nav__links">
-          <a href="#demo">Platform</a>
-          <a href="#how-it-works">How it works</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#waitlist">Early Access</a>
+          <a href="/#demo">Platform</a>
+          <a href="/#how-it-works">How it works</a>
+          <a href="/blog">Resources</a>
+          <a href="/#privacy">Privacy</a>
+          <a href="/#waitlist">Early Access</a>
         </div>
-        <a href="#waitlist" className="nav__cta">Get early access →</a>
+        <a href="/#waitlist" className="nav__cta">Get early access →</a>
       </div>
     </nav>
   );

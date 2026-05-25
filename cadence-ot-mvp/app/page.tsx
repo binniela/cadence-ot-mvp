@@ -10,14 +10,14 @@ export default function Home() {
       <section className="hero">
         <div className="hero__backdrop">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/hero.png" alt="" className="hero__bg-img" aria-hidden="true" />
+          <img src="/hero.png" alt="School-based occupational therapist documenting session notes on iPhone after a student session" className="hero__bg-img" />
         </div>
         <div className="hero__overlay" />
         <div className="hero__inner">
           <p className="hero__label">School-based OT documentation · Voice-first</p>
           <h1 className="hero__headline">Document from the car,<br />not after bedtime.</h1>
           <p className="hero__sub">
-            Speak for 60 seconds after any session. Get a copy-ready note before you leave campus.
+            Speak for 60 seconds after any session. Get a copy-ready SOAP note, DAP note, or goal-bullet before you leave campus — no templates, no typing.
           </p>
           <div className="hero__actions">
             <a href="#waitlist" className="btn-primary">Get early access</a>
@@ -280,11 +280,12 @@ export default function Home() {
         <div className="footer__inner">
           <span className="footer__logo">PraxisOT</span>
           <div className="footer__links">
-            <a href="#how-it-works">How it works</a>
-            <a href="#features">Features</a>
+            <a href="/#how-it-works">How it works</a>
+            <a href="/blog">Resources</a>
+            <a href="/soap-note-template">Free Templates</a>
             <a href="/faq">FAQ</a>
-            <a href="#privacy">Privacy</a>
-            <a href="#waitlist">Early Access</a>
+            <a href="/#privacy">Privacy</a>
+            <a href="/#waitlist">Early Access</a>
           </div>
           <span className="footer__copy">&copy; 2026 PraxisOT, Inc.</span>
         </div>
