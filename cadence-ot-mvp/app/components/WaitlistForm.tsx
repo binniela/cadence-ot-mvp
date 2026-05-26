@@ -52,8 +52,13 @@ export function WaitlistForm() {
 
   return (
     <form className="waitlist__form" onSubmit={handleSubmit}>
+      <label className="sr-only" htmlFor="waitlist-email">
+        Email address
+      </label>
       <div className="waitlist__row">
         <input
+          id="waitlist-email"
+          name="email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

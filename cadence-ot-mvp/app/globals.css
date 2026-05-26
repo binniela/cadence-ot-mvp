@@ -83,6 +83,18 @@ a {
   text-decoration: none;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Nav ─────────────────────────────────────────────────────────────── */
 
 .nav {
@@ -3170,6 +3182,16 @@ a {
     width: 100%;
   }
 
+}
+
+@media (max-width: 640px) {
+  .nav__inner {
+    padding: 0 24px;
+  }
+
+  .nav__cta {
+    display: none;
+  }
 }
 
 /* ── Composer preview in product shell ──────────────────────────────── */
